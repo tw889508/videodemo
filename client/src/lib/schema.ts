@@ -1,7 +1,7 @@
-// AI 视频生成蓝图 - 完整数据结构定义（内容增强版）
+// AI 视频生成蓝图 - 完整数据结构定义（深度优化版）
+// 优化方向：物理真实感、镜头不完美感、感官深度、光影微观控制、叙事结构、音频空间感
 
 export interface VideoBlueprint {
-  metadata: Metadata;
   scene: SceneDescription;
   visualStyle: VisualStyle;
   cinematography: Cinematography;
@@ -13,16 +13,9 @@ export interface VideoBlueprint {
   postProcessing: PostProcessing;
 }
 
-export interface Metadata {
-  blueprint_id: string;
-  name: string;
-  description: string;
-  version: number;
-  created_at: string;
-  target_model: string;
-  project_id: string;
-}
-
+// ============================================================
+// 场景描述（含物理真实感 + 感官深度扩展）
+// ============================================================
 export interface SceneDescription {
   subject_type: string;
   subject: string;
@@ -33,16 +26,34 @@ export interface SceneDescription {
   subject_clothing: string;
   subject_body: string;
   subject_emotion: string;
+  micro_expression: string;
   environment: string;
   environment_weather: string;
   environment_season: string;
   environment_details: string;
   action: string;
+  action_physical_detail: string;
   interaction: string;
   mood: string;
   narrative_context: string;
+  // 物理真实感（A 组）
+  surface_material: string;
+  material_detail: string;
+  physics_behavior: string;
+  physics_detail: string;
+  micro_elements: string[];
+  weathering_aging: string;
+  interaction_physics: string;
+  gravity_weight: string;
+  // 感官深度（C 组）
+  sensory_layers: string;
+  time_progression: string;
+  spatial_depth_layers: string;
 }
 
+// ============================================================
+// 视觉风格
+// ============================================================
 export interface VisualStyle {
   art_style: string;
   era_style: string;
@@ -56,6 +67,9 @@ export interface VisualStyle {
   visual_reference_url: string;
 }
 
+// ============================================================
+// 摄影控制（含镜头不完美感 B 组）
+// ============================================================
 export interface Cinematography {
   shot_type: string;
   camera_angle: string;
@@ -69,8 +83,20 @@ export interface Cinematography {
   focus_transition: string;
   camera_shake: string;
   pov_type: string;
+  // 镜头不完美感（B 组）
+  lens_imperfection: string[];
+  bokeh_shape: string;
+  film_texture: string;
+  handheld_style: string;
+  exposure_variation: string;
+  white_balance_cast: string;
+  lens_coating: string;
+  focus_accuracy: string;
 }
 
+// ============================================================
+// 光照系统（含微观光影控制 D 组）
+// ============================================================
 export interface Lighting {
   time_of_day: string;
   key_light_type: string;
@@ -82,8 +108,16 @@ export interface Lighting {
   practical_lights: string;
   atmospheric_effects: string[];
   shadow_style: string;
+  // 微观光影（D 组）
+  caustics: string;
+  subsurface_scattering: string;
+  color_spill: string;
+  light_falloff: string;
 }
 
+// ============================================================
+// 音频设计（含空间感与层次 F 组）
+// ============================================================
 export interface AudioDesign {
   ambient_sound: string;
   music_style: string;
@@ -93,8 +127,17 @@ export interface AudioDesign {
   dialogue: string;
   voiceover: string;
   audio_mood: string;
+  // 音频空间感（F 组）
+  audio_space: string;
+  audio_layers: string;
+  sync_points: string;
+  silence_use: string;
+  audio_distance: string;
 }
 
+// ============================================================
+// 运动与节奏（含叙事结构 E 组）
+// ============================================================
 export interface MotionPacing {
   subject_motion_speed: string;
   camera_motion_speed: string;
@@ -103,6 +146,12 @@ export interface MotionPacing {
   transition_in: string;
   transition_out: string;
   rhythm_reference: string;
+  // 叙事结构（E 组）
+  opening_frame: string;
+  reveal_structure: string;
+  emotion_arc: string;
+  climax_moment: string;
+  ending_frame: string;
 }
 
 export interface TechnicalParameters {
@@ -136,27 +185,10 @@ export interface PostProcessing {
 }
 
 // ============================================================
-// 枚举选项定义（内容增强版：补充说明文字与更多选项）
+// 枚举选项定义（深度优化版）
 // ============================================================
 
 export const ENUMS = {
-  target_model: [
-    { value: "Sora_2_Pro", label: "Sora 2 Pro", desc: "最长 25 秒，720p/1080p" },
-    { value: "Runway_Gen4", label: "Runway Gen-4", desc: "5/10 秒，24fps，多宽高比" },
-    { value: "Runway_Gen4_Turbo", label: "Runway Gen-4 Turbo", desc: "更快速度，更低成本" },
-    { value: "Runway_Gen4.5", label: "Runway Gen-4.5", desc: "增强质量与一致性" },
-    { value: "Kling_3_Pro", label: "Kling 3 Pro", desc: "最高 1080p，3-15 秒" },
-    { value: "Luma_Ray2", label: "Luma Ray 2", desc: "540p-4K，5 秒" },
-    { value: "Luma_Ray2_Flash", label: "Luma Ray 2 Flash", desc: "更快生成速度" },
-    { value: "Veo_3.1", label: "Veo 3.1", desc: "最高 4K，4-8 秒，支持音频" },
-    { value: "Hailuo_2.3_Pro", label: "Hailuo 2.3 Pro", desc: "1080p，约 6 秒" },
-    { value: "Wan_2.2", label: "Wan 2.2", desc: "480p/720p，开源模型" },
-    { value: "PixVerse_v5.5", label: "PixVerse v5.5", desc: "360p-1080p，5 秒" },
-    { value: "Seedance_1.5_Pro", label: "Seedance 1.5 Pro", desc: "约 5 秒" },
-    { value: "Vidu_Q3", label: "Vidu Q3", desc: "1-16 秒" },
-    { value: "Generic", label: "通用模式", desc: "不针对特定模型优化" },
-  ],
-
   // ---- 场景描述 ----
   subject_type: [
     { value: "Human", label: "人物", desc: "叙事、广告、短片" },
@@ -251,6 +283,64 @@ export const ENUMS = {
     { value: "神圣", label: "神圣 Sacred", desc: "宗教、仪式场景" },
   ],
 
+  // ---- A 组：物理真实感 ----
+  surface_material: [
+    { value: "皮肤", label: "皮肤 Skin", desc: "毛孔、汗珠、细纹可见" },
+    { value: "金属-镜面", label: "金属-镜面 Polished Metal", desc: "高反射率，清晰映射环境" },
+    { value: "金属-拉丝", label: "金属-拉丝 Brushed Metal", desc: "细密划痕纹理，柔和反射" },
+    { value: "金属-锈蚀", label: "金属-锈蚀 Rusted Metal", desc: "氧化斑驳，粗糙表面" },
+    { value: "织物-丝绸", label: "丝绸 Silk", desc: "光滑流动，高光泽反射" },
+    { value: "织物-棉麻", label: "棉麻 Cotton/Linen", desc: "自然纹理，哑光质感" },
+    { value: "织物-皮革", label: "皮革 Leather", desc: "纹理细腻，半光泽" },
+    { value: "织物-针织", label: "针织 Knit", desc: "编织纹理，柔软蓬松" },
+    { value: "木材", label: "木材 Wood", desc: "年轮纹理、磨损痕迹" },
+    { value: "玻璃-透明", label: "透明玻璃 Clear Glass", desc: "折射、反射、透光" },
+    { value: "玻璃-磨砂", label: "磨砂玻璃 Frosted Glass", desc: "漫射透光，模糊背景" },
+    { value: "石材-大理石", label: "大理石 Marble", desc: "光滑纹理，高端质感" },
+    { value: "石材-粗糙", label: "粗糙岩石 Rough Stone", desc: "粗糙表面，自然纹理" },
+    { value: "液体-水", label: "水 Water", desc: "透明、折射、波纹" },
+    { value: "液体-油", label: "油 Oil", desc: "粘稠、彩虹反射" },
+    { value: "塑料", label: "塑料/树脂 Plastic", desc: "光滑或磨砂，均匀质感" },
+    { value: "纸张", label: "纸张 Paper", desc: "纤维纹理，吸光表面" },
+    { value: "自定义", label: "自定义" },
+  ],
+  physics_behavior: [
+    { value: "布料-轻盈", label: "布料飘动-轻盈 Light Fabric", desc: "丝绸、薄纱随风轻柔飘动" },
+    { value: "布料-厚重", label: "布料飘动-厚重 Heavy Fabric", desc: "厚棉布、皮革缓慢摆动" },
+    { value: "头发-风中", label: "头发-风中飘散 Hair in Wind", desc: "发丝随风自然飘散" },
+    { value: "头发-湿发", label: "头发-湿发贴合 Wet Hair", desc: "湿润头发贴合皮肤" },
+    { value: "液体-滴落", label: "液体滴落 Dripping", desc: "水滴沿表面缓慢滑落" },
+    { value: "液体-溅射", label: "液体溅射 Splashing", desc: "液体飞溅散射" },
+    { value: "烟雾-轻烟", label: "轻烟袅袅 Light Smoke", desc: "细烟缓慢上升扩散" },
+    { value: "烟雾-浓烟", label: "浓烟翻滚 Heavy Smoke", desc: "浓密烟雾翻滚涌动" },
+    { value: "粒子-灰尘", label: "灰尘飘浮 Dust Particles", desc: "微小颗粒在空气中飘浮" },
+    { value: "粒子-花瓣", label: "花瓣飘落 Falling Petals", desc: "花瓣轻柔飘落" },
+    { value: "粒子-雪花", label: "雪花飘落 Snowfall", desc: "雪花缓慢飘落" },
+    { value: "粒子-火星", label: "火星飞溅 Sparks", desc: "火星四溅上升" },
+    { value: "刚体碰撞", label: "刚体碰撞 Rigid Body", desc: "硬物碰撞弹跳" },
+    { value: "柔体变形", label: "柔体变形 Soft Body", desc: "柔软物体挤压变形" },
+    { value: "自定义", label: "自定义" },
+  ],
+  micro_elements: [
+    { value: "灰尘颗粒", label: "空气灰尘 Dust in Air", desc: "阳光下可见的微小颗粒" },
+    { value: "水汽蒸汽", label: "水汽/蒸汽 Steam", desc: "呼出的白气、热饮蒸汽" },
+    { value: "飞虫花粉", label: "飞虫/花粉 Insects/Pollen", desc: "空气中飘浮的花粉或飞虫" },
+    { value: "雨滴水珠", label: "雨滴/水珠 Raindrops", desc: "表面凝结的水珠" },
+    { value: "火星余烬", label: "火星/余烬 Embers", desc: "飘浮的火星和余烬" },
+    { value: "斑驳光影", label: "斑驳光影 Dappled Light", desc: "透过树叶的斑驳光影" },
+    { value: "镜面反射", label: "镜面反射 Reflections", desc: "镜面或光滑表面的环境反射" },
+    { value: "积水反射", label: "积水反射 Puddle Reflections", desc: "地面积水反射天空和灯光" },
+    { value: "蛛网露珠", label: "蛛网/露珠 Cobwebs/Dew", desc: "蛛网上的露珠折射光线" },
+    { value: "自定义", label: "自定义" },
+  ],
+  gravity_weight: [
+    { value: "失重", label: "失重/漂浮 Zero Gravity", desc: "太空、梦境中的漂浮感" },
+    { value: "轻盈", label: "轻盈 Lightweight", desc: "如纱巾、气球般轻柔" },
+    { value: "正常", label: "正常重力 Normal", desc: "符合现实世界的重力" },
+    { value: "沉重", label: "沉重 Heavy", desc: "如铠甲、巨石般沉重" },
+    { value: "极重", label: "极重 Massive", desc: "如巨石坠落、建筑倒塌" },
+  ],
+
   // ---- 视觉风格 ----
   art_style: [
     { value: "写实", label: "写实 Photorealistic", desc: "接近真实世界的视觉效果" },
@@ -277,6 +367,8 @@ export const ENUMS = {
     { value: "剪纸", label: "剪纸 Paper Cut", desc: "剪纸/拼贴艺术风格" },
     { value: "黑白", label: "黑白 Black & White", desc: "经典黑白影像" },
     { value: "低多边形", label: "低多边形 Low Poly", desc: "几何化 3D 风格" },
+    { value: "监控录像", label: "监控录像 Surveillance", desc: "低画质、固定机位、时间戳" },
+    { value: "手机拍摄", label: "手机拍摄 Phone Footage", desc: "竖屏、自动对焦、日常感" },
   ],
   render_engine: [
     { value: "无", label: "无/不指定" },
@@ -309,7 +401,6 @@ export const ENUMS = {
     { value: "金色时刻暖调", label: "金色时刻暖调", desc: "整体偏暖金色" },
     { value: "银翼杀手风", label: "银翼杀手风 Blade Runner", desc: "暗部偏青，高光偏橙" },
     { value: "矩阵绿调", label: "矩阵绿调 Matrix Green", desc: "整体偏绿的科技感" },
-    { value: "复古暖黄", label: "复古暖黄 Vintage Warm", desc: "70年代暖黄色调" },
     { value: "漂白旁路", label: "漂白旁路 Bleach Bypass", desc: "低饱和高对比" },
     { value: "交叉冲洗", label: "交叉冲洗 Cross Process", desc: "非常规色彩偏移" },
     { value: "日系清新", label: "日系清新 Japanese Fresh", desc: "低对比高亮度柔和色调" },
@@ -328,6 +419,10 @@ export const ENUMS = {
     { value: "版画", label: "版画 Woodcut", desc: "木刻版画的粗犷线条" },
     { value: "磨砂玻璃", label: "磨砂玻璃 Frosted Glass", desc: "磨砂透光质感" },
     { value: "VHS录像带", label: "VHS 录像带", desc: "模拟录像带的噪点和色偏" },
+    { value: "湿润感", label: "湿润感 Wet Look", desc: "表面有水膜反射" },
+    { value: "哑光磨砂", label: "哑光/磨砂 Matte", desc: "无反射的柔和表面" },
+    { value: "丝绒质感", label: "丝绒质感 Velvet", desc: "柔软吸光的织物感" },
+    { value: "金属拉丝", label: "金属拉丝 Brushed Metal", desc: "细密划痕的金属表面" },
     { value: "无", label: "无/默认" },
   ],
 
@@ -341,12 +436,14 @@ export const ENUMS = {
     { value: "中近景", label: "中近景 Medium Close-up", desc: "胸部以上，表情与对话" },
     { value: "近景", label: "近景 Close-up", desc: "面部或物体特定部分" },
     { value: "大特写", label: "大特写 Extreme Close-up", desc: "眼睛、嘴唇等极小区域" },
-    { value: "插入镜头", label: "插入镜头 Insert Shot", desc: "特定物体或细节" },
+    { value: "插入镜头", label: "插入镜头 Insert Shot", desc: "特定物体或细节的特写切入" },
+    { value: "过肩镜头", label: "过肩镜头 Over-the-Shoulder", desc: "对话场景的经典构图" },
     { value: "双人镜头", label: "双人镜头 Two Shot", desc: "两个人物同框" },
     { value: "群像镜头", label: "群像镜头 Group Shot", desc: "多个人物同框" },
   ],
   camera_angle: [
     { value: "鸟瞰", label: "鸟瞰 Bird's Eye", desc: "正上方俯视，展示空间布局" },
+    { value: "上帝视角", label: "上帝视角 God's Eye", desc: "正上方90度俯视" },
     { value: "高角度", label: "高角度 High Angle", desc: "从上方俯拍，主体显得渺小" },
     { value: "平视", label: "平视 Eye Level", desc: "自然、中性的视角" },
     { value: "低角度", label: "低角度 Low Angle", desc: "从下方仰拍，主体显得强大" },
@@ -372,13 +469,17 @@ export const ENUMS = {
     { value: "水平平移", label: "水平平移 Pan", desc: "水平旋转，跟随动作" },
     { value: "垂直摇移", label: "垂直摇移 Tilt", desc: "垂直旋转，展示高度" },
     { value: "轨道环绕", label: "轨道环绕 Orbit", desc: "围绕主体旋转，产品展示" },
+    { value: "弧形运动", label: "弧形运动 Arc Shot", desc: "围绕主体做弧线运动" },
     { value: "跟踪", label: "跟踪 Tracking", desc: "跟随主体移动" },
     { value: "手持", label: "手持 Handheld", desc: "模拟手持拍摄的轻微晃动" },
     { value: "稳定器", label: "稳定器 Steadicam", desc: "平滑的跟随运动" },
     { value: "升降", label: "升降 Crane", desc: "垂直升降，戏剧性揭示" },
+    { value: "垂直升降", label: "垂直升降 Vertical Rise/Drop", desc: "无人机式垂直运动" },
     { value: "无人机", label: "无人机 Drone", desc: "空中飞行拍摄，壮观鸟瞰" },
     { value: "变焦", label: "变焦 Zoom", desc: "改变焦距，快速聚焦" },
+    { value: "碰撞推进", label: "碰撞推进 Crash Zoom", desc: "快速猛推，制造紧迫感" },
     { value: "横移", label: "横移 Truck", desc: "水平平移（非旋转）" },
+    { value: "穿越运动", label: "穿越运动 Through Shot", desc: "穿过窗户/门洞/缝隙" },
     { value: "旋转", label: "旋转 Roll", desc: "沿镜头轴旋转，眩晕感" },
     { value: "一镜到底", label: "一镜到底 Oner", desc: "不间断的连续运动" },
   ],
@@ -439,6 +540,74 @@ export const ENUMS = {
     { value: "第三人称", label: "第三人称" },
     { value: "第一人称", label: "第一人称 POV" },
     { value: "上帝视角", label: "上帝视角" },
+  ],
+
+  // ---- B 组：镜头不完美感 ----
+  lens_imperfection: [
+    { value: "色差", label: "色差/色散 Chromatic Aberration", desc: "边缘出现彩色条纹" },
+    { value: "暗角", label: "暗角 Vignetting", desc: "画面四角自然变暗" },
+    { value: "桶形畸变", label: "桶形畸变 Barrel Distortion", desc: "广角镜头的画面弯曲" },
+    { value: "枕形畸变", label: "枕形畸变 Pincushion", desc: "长焦镜头的画面内凹" },
+    { value: "镜头眩光", label: "镜头眩光 Lens Flare", desc: "光源方向的光晕和光斑" },
+    { value: "鬼影", label: "鬼影 Ghosting", desc: "多层镜片内反射产生的虚像" },
+    { value: "对焦呼吸", label: "对焦呼吸 Focus Breathing", desc: "变焦时画面微缩放" },
+    { value: "无瑕疵", label: "无瑕疵 Pristine", desc: "完美无瑕的光学表现" },
+  ],
+  bokeh_shape: [
+    { value: "圆形", label: "圆形 Circular", desc: "高端镜头的完美圆形散景" },
+    { value: "六角形", label: "多边形/六角形 Hexagonal", desc: "普通镜头光圈叶片形成" },
+    { value: "猫眼形", label: "猫眼形 Cat's Eye", desc: "画面边缘拉长的椭圆散景" },
+    { value: "旋转散景", label: "旋转散景 Swirly Bokeh", desc: "老式镜头的漩涡效果" },
+    { value: "椭圆形", label: "椭圆形 Oval", desc: "变形宽银幕镜头的椭圆散景" },
+    { value: "环形", label: "环形/甜甜圈 Donut", desc: "折返镜头的环形散景" },
+    { value: "自定义", label: "自定义" },
+  ],
+  film_texture: [
+    { value: "数字纯净", label: "数字纯净 Digital Clean", desc: "无纹理，现代数字感" },
+    { value: "细腻胶片", label: "细腻胶片颗粒 Fine Grain", desc: "35mm 细颗粒，电影质感" },
+    { value: "粗颗粒胶片", label: "粗颗粒胶片 Coarse Grain", desc: "16mm/Super 8 粗颗粒" },
+    { value: "高ISO噪点", label: "高ISO数字噪点 High ISO Noise", desc: "暗光环境的彩色噪点" },
+    { value: "果冻效应", label: "CMOS 果冻效应 Rolling Shutter", desc: "快速运动时的倾斜变形" },
+    { value: "CRT扫描线", label: "CRT 扫描线 Scanlines", desc: "复古显示器效果" },
+    { value: "VHS磁带", label: "VHS 磁带纹理 VHS Texture", desc: "磁带噪点、色偏、跟踪线" },
+  ],
+  handheld_style: [
+    { value: "无", label: "无（三脚架稳定）", desc: "完全稳定，无任何晃动" },
+    { value: "呼吸微抖", label: "呼吸感微抖 Breathing", desc: "专业手持，极轻微的呼吸起伏" },
+    { value: "肩扛式", label: "肩扛式 Shoulder Rig", desc: "纪录片风格，中等晃动" },
+    { value: "步行跟拍", label: "步行跟拍 Walking", desc: "随步伐节奏上下起伏" },
+    { value: "奔跑跟拍", label: "奔跑跟拍 Running", desc: "剧烈晃动，紧迫感" },
+    { value: "车内拍摄", label: "车内拍摄 In-Vehicle", desc: "引擎震动的持续微颤" },
+    { value: "自定义", label: "自定义" },
+  ],
+  exposure_variation: [
+    { value: "完美曝光", label: "完美曝光 Perfect", desc: "无任何曝光变化" },
+    { value: "自动调整", label: "自动曝光调整 Auto Exposure", desc: "明暗场景切换时的渐变" },
+    { value: "轻微过曝", label: "轻微过曝 Slight Overexposure", desc: "高光溢出，梦幻感" },
+    { value: "轻微欠曝", label: "轻微欠曝 Slight Underexposure", desc: "暗部细节丢失，神秘感" },
+    { value: "曝光呼吸", label: "曝光呼吸 Exposure Breathing", desc: "随光源变化的微波动" },
+    { value: "故意剪影", label: "故意剪影 Silhouette", desc: "强逆光下的黑色轮廓" },
+  ],
+  white_balance_cast: [
+    { value: "准确", label: "准确白平衡 Accurate", desc: "色彩还原准确" },
+    { value: "偏暖", label: "偏暖 Warm Cast", desc: "室内钨丝灯未校正" },
+    { value: "偏冷", label: "偏冷 Cool Cast", desc: "日光灯/阴天未校正" },
+    { value: "偏绿", label: "偏绿 Green Cast", desc: "荧光灯特征色偏" },
+    { value: "混合光源", label: "混合光源 Mixed", desc: "冷暖交错的复杂色温" },
+    { value: "自定义", label: "自定义" },
+  ],
+  lens_coating: [
+    { value: "现代多层", label: "现代多层镀膜 Multi-Coated", desc: "眩光少，色彩中性" },
+    { value: "单层镀膜", label: "单层镀膜 Single-Coated", desc: "温暖的眩光，复古感" },
+    { value: "无镀膜", label: "无镀膜 Uncoated", desc: "强烈眩光和低对比度" },
+    { value: "变形宽银幕", label: "变形宽银幕镀膜 Anamorphic", desc: "水平蓝色眩光条" },
+  ],
+  focus_accuracy: [
+    { value: "精确合焦", label: "精确合焦 Sharp Focus", desc: "完美锐利" },
+    { value: "前跑焦", label: "轻微前跑焦 Front Focus", desc: "焦点略在主体前方" },
+    { value: "后跑焦", label: "轻微后跑焦 Back Focus", desc: "焦点略在主体后方" },
+    { value: "渐进合焦", label: "渐进合焦 Gradual Focus", desc: "从模糊到清晰的寻焦过程" },
+    { value: "焦点游移", label: "焦点游移 Focus Drift", desc: "手动对焦的微小波动" },
   ],
 
   // ---- 光照系统 ----
@@ -527,6 +696,29 @@ export const ENUMS = {
     { value: "明暗对比", label: "戏剧性明暗对比 Chiaroscuro", desc: "强烈的光暗对比" },
   ],
 
+  // ---- D 组：微观光影 ----
+  caustics: [
+    { value: "无", label: "无" },
+    { value: "水面焦散", label: "水面焦散 Water Caustics", desc: "水面反射的波纹光斑投射在墙面/天花板" },
+    { value: "玻璃焦散", label: "玻璃焦散 Glass Caustics", desc: "透过玻璃杯/水晶的彩虹光斑" },
+    { value: "金属焦散", label: "金属焦散 Metal Caustics", desc: "抛光金属表面的反射光斑" },
+    { value: "自定义", label: "自定义" },
+  ],
+  subsurface_scattering: [
+    { value: "无", label: "无" },
+    { value: "皮肤SSS", label: "皮肤 SSS Skin", desc: "光线穿透耳朵/手指边缘的红色透光" },
+    { value: "树叶SSS", label: "树叶 SSS Leaves", desc: "阳光穿透叶片的翠绿发光" },
+    { value: "蜡质SSS", label: "蜡烛/蜡质 SSS Wax", desc: "光线穿透蜡质的温暖发光" },
+    { value: "薄织物SSS", label: "薄织物 SSS Fabric", desc: "光线穿透薄纱的柔和透光" },
+    { value: "自定义", label: "自定义" },
+  ],
+  light_falloff: [
+    { value: "自然衰减", label: "自然衰减 Inverse Square", desc: "平方反比定律，真实物理衰减" },
+    { value: "线性衰减", label: "线性衰减 Linear", desc: "均匀减弱" },
+    { value: "急剧衰减", label: "急剧衰减 Sharp Falloff", desc: "聚光灯效果，边缘锐利" },
+    { value: "无衰减", label: "无衰减 No Falloff", desc: "平行光/阳光，均匀照射" },
+  ],
+
   // ---- 音频设计 ----
   ambient_sound: [
     { value: "城市街道", label: "城市街道", desc: "车流、人群、喇叭" },
@@ -594,6 +786,32 @@ export const ENUMS = {
     { value: "自定义", label: "自定义" },
   ],
 
+  // ---- F 组：音频空间感 ----
+  audio_space: [
+    { value: "开阔户外", label: "开阔户外 Open Air", desc: "自然混响，声音扩散" },
+    { value: "狭窄室内", label: "狭窄室内 Small Room", desc: "短混响，声音紧凑" },
+    { value: "大厅教堂", label: "大厅/教堂 Cathedral", desc: "长混响，回声明显" },
+    { value: "隧道走廊", label: "隧道/走廊 Tunnel", desc: "管状回声" },
+    { value: "水下", label: "水下 Underwater", desc: "闷声，低频为主" },
+    { value: "隔音室", label: "隔音室/录音棚 Anechoic", desc: "无混响，干声" },
+    { value: "自定义", label: "自定义" },
+  ],
+  silence_use: [
+    { value: "不使用", label: "不使用静默", desc: "持续有声音" },
+    { value: "开场静默", label: "开场静默 Opening Silence", desc: "从寂静中开始" },
+    { value: "高潮前静默", label: "高潮前静默 Pre-Climax", desc: "突然安静制造紧张" },
+    { value: "结尾静默", label: "结尾静默 Ending Silence", desc: "声音逐渐消失" },
+    { value: "对比静默", label: "对比静默 Contrast", desc: "喧闹后突然安静" },
+    { value: "自定义", label: "自定义" },
+  ],
+  audio_distance: [
+    { value: "极近", label: "极近 ASMR", desc: "耳语/呼吸，ASMR 级" },
+    { value: "近距离", label: "近距离 Close", desc: "正常对话距离" },
+    { value: "中距离", label: "中距离 Medium", desc: "房间对面" },
+    { value: "远距离", label: "远距离 Far", desc: "街道对面" },
+    { value: "极远", label: "极远 Very Far", desc: "远处的回声" },
+  ],
+
   // ---- 运动与节奏 ----
   time_effect: [
     { value: "正常速度", label: "正常速度", desc: "无特殊时间效果" },
@@ -625,6 +843,18 @@ export const ENUMS = {
     { value: "闪黑", label: "闪黑 Blackout", desc: "瞬间黑屏过渡" },
     { value: "运动模糊", label: "运动模糊 Motion Blur", desc: "通过快速运动模糊过渡" },
     { value: "匹配剪辑", label: "匹配剪辑 Match Cut", desc: "通过相似形状或动作过渡" },
+  ],
+
+  // ---- E 组：叙事结构 ----
+  reveal_structure: [
+    { value: "无", label: "无特殊结构", desc: "直接展示完整场景" },
+    { value: "局部到全貌", label: "局部到全貌 Detail to Wide", desc: "从特写拉远揭示全景" },
+    { value: "全貌到局部", label: "全貌到局部 Wide to Detail", desc: "从远景推近聚焦细节" },
+    { value: "遮挡揭示", label: "遮挡揭示 Reveal from Cover", desc: "从障碍物后方移出" },
+    { value: "焦点揭示", label: "焦点揭示 Focus Reveal", desc: "从失焦到合焦" },
+    { value: "光线揭示", label: "光线揭示 Light Reveal", desc: "从黑暗到光明" },
+    { value: "转身揭示", label: "转身揭示 Turn Reveal", desc: "主体转身面向镜头" },
+    { value: "自定义", label: "自定义" },
   ],
 
   // ---- 技术参数 ----
@@ -659,7 +889,7 @@ export const ENUMS = {
     { value: "允许变化", label: "允许变化", desc: "允许 AI 自由发挥" },
   ],
 
-  // 预置负面提示词（按类别分组）
+  // 预置负面提示词
   negative_preset_quality: [
     { value: "模糊", label: "模糊 Blurry" },
     { value: "噪点过多", label: "噪点过多 Noisy" },
@@ -698,8 +928,17 @@ export const ENUMS = {
     { value: "AI感过重", label: "AI 感过重" },
     { value: "塑料感", label: "塑料感 Plastic Look" },
   ],
+  negative_preset_ai: [
+    { value: "过度平滑的皮肤", label: "过度平滑的皮肤 Over-smooth Skin" },
+    { value: "不自然的对称", label: "不自然的对称 Unnatural Symmetry" },
+    { value: "重复纹理图案", label: "重复纹理图案 Repeating Patterns" },
+    { value: "漂浮的物体", label: "漂浮的物体 Floating Objects" },
+    { value: "融合的手指", label: "融合的手指 Fused Fingers" },
+    { value: "穿模穿透", label: "穿模/穿透 Clipping" },
+    { value: "背景突变", label: "背景突变 Background Shift" },
+  ],
 
-  // 预置质量增强词（按类别分组）
+  // 预置质量增强词
   booster_preset_resolution: [
     { value: "超高清", label: "超高清 Ultra HD" },
     { value: "4K", label: "4K" },
@@ -731,6 +970,12 @@ export const ENUMS = {
     { value: "大师级构图", label: "大师级构图 Master Composition" },
     { value: "专业级后期", label: "专业级后期 Pro Post-processing" },
   ],
+  booster_preset_realism: [
+    { value: "微妙的镜头瑕疵", label: "微妙的镜头瑕疵 Subtle Lens Imperfections" },
+    { value: "自然的皮肤纹理", label: "自然的皮肤纹理 Natural Skin Texture" },
+    { value: "真实的环境磨损", label: "真实的环境磨损 Realistic Wear" },
+    { value: "有机的运动轨迹", label: "有机的运动轨迹 Organic Motion" },
+  ],
 
   // ---- 后期处理 ----
   upscaling: [
@@ -759,13 +1004,12 @@ export const ENUMS = {
 
 // 模块配置
 export const MODULES = [
-  { key: "metadata", label: "元数据", icon: "FileText", desc: "蓝图身份与项目信息" },
-  { key: "scene", label: "场景描述", icon: "Clapperboard", desc: "主体、环境与叙事" },
+  { key: "scene", label: "场景描述", icon: "Clapperboard", desc: "主体、环境、物理真实感与感官深度" },
   { key: "visualStyle", label: "视觉风格", icon: "Palette", desc: "艺术风格与色彩方案" },
-  { key: "cinematography", label: "摄影控制", icon: "Camera", desc: "镜头语言与构图" },
-  { key: "lighting", label: "光照系统", icon: "Sun", desc: "布光方案与氛围" },
-  { key: "audio", label: "音频设计", icon: "Music", desc: "声音与音乐规划" },
-  { key: "motion", label: "运动与节奏", icon: "Zap", desc: "动态与时间控制" },
+  { key: "cinematography", label: "摄影控制", icon: "Camera", desc: "镜头语言、构图与镜头个性" },
+  { key: "lighting", label: "光照系统", icon: "Sun", desc: "布光方案、氛围与微观光影" },
+  { key: "audio", label: "音频设计", icon: "Music", desc: "声音、音乐与空间感" },
+  { key: "motion", label: "运动与叙事", icon: "Zap", desc: "动态控制与叙事结构" },
   { key: "technical", label: "技术参数", icon: "Settings", desc: "模型级生成参数" },
   { key: "quality", label: "质量控制", icon: "Shield", desc: "增强与约束指令" },
   { key: "postProcessing", label: "后期处理", icon: "Wand2", desc: "上采样与后处理" },
@@ -774,15 +1018,6 @@ export const MODULES = [
 // 默认蓝图数据
 export function createDefaultBlueprint(): VideoBlueprint {
   return {
-    metadata: {
-      blueprint_id: `vid-bp-${Date.now()}`,
-      name: "",
-      description: "",
-      version: 1,
-      created_at: new Date().toISOString(),
-      target_model: "Generic",
-      project_id: "",
-    },
     scene: {
       subject_type: "",
       subject: "",
@@ -793,14 +1028,27 @@ export function createDefaultBlueprint(): VideoBlueprint {
       subject_clothing: "",
       subject_body: "",
       subject_emotion: "",
+      micro_expression: "",
       environment: "",
       environment_weather: "",
       environment_season: "",
       environment_details: "",
       action: "",
+      action_physical_detail: "",
       interaction: "",
       mood: "",
       narrative_context: "",
+      surface_material: "",
+      material_detail: "",
+      physics_behavior: "",
+      physics_detail: "",
+      micro_elements: [],
+      weathering_aging: "",
+      interaction_physics: "",
+      gravity_weight: "",
+      sensory_layers: "",
+      time_progression: "",
+      spatial_depth_layers: "",
     },
     visualStyle: {
       art_style: "",
@@ -827,6 +1075,14 @@ export function createDefaultBlueprint(): VideoBlueprint {
       focus_transition: "",
       camera_shake: "",
       pov_type: "",
+      lens_imperfection: [],
+      bokeh_shape: "",
+      film_texture: "",
+      handheld_style: "",
+      exposure_variation: "",
+      white_balance_cast: "",
+      lens_coating: "",
+      focus_accuracy: "",
     },
     lighting: {
       time_of_day: "",
@@ -839,6 +1095,10 @@ export function createDefaultBlueprint(): VideoBlueprint {
       practical_lights: "",
       atmospheric_effects: [],
       shadow_style: "",
+      caustics: "",
+      subsurface_scattering: "",
+      color_spill: "",
+      light_falloff: "",
     },
     audio: {
       ambient_sound: "",
@@ -849,6 +1109,11 @@ export function createDefaultBlueprint(): VideoBlueprint {
       dialogue: "",
       voiceover: "",
       audio_mood: "",
+      audio_space: "",
+      audio_layers: "",
+      sync_points: "",
+      silence_use: "",
+      audio_distance: "",
     },
     motion: {
       subject_motion_speed: "",
@@ -858,6 +1123,11 @@ export function createDefaultBlueprint(): VideoBlueprint {
       transition_in: "",
       transition_out: "",
       rhythm_reference: "",
+      opening_frame: "",
+      reveal_structure: "",
+      emotion_arc: "",
+      climax_moment: "",
+      ending_frame: "",
     },
     technical: {
       resolution: "1080p",

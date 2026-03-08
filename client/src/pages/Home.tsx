@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import {
-  FileText, Clapperboard, Palette, Camera, Sun, Music, Zap, Settings, Shield, Wand2,
+  Clapperboard, Palette, Camera, Sun, Music, Zap, Settings, Shield, Wand2,
   Download, Upload, Eye, Copy, ChevronRight, Film
 } from "lucide-react";
 import { createDefaultBlueprint, MODULES, type VideoBlueprint } from "@/lib/schema";
@@ -11,7 +11,6 @@ import { ModuleEditor } from "@/components/ModuleEditor";
 import { JsonPreview } from "@/components/JsonPreview";
 
 const ICONS: Record<string, React.ReactNode> = {
-  FileText: <FileText size={18} />,
   Clapperboard: <Clapperboard size={18} />,
   Palette: <Palette size={18} />,
   Camera: <Camera size={18} />,
@@ -25,7 +24,7 @@ const ICONS: Record<string, React.ReactNode> = {
 
 export default function Home() {
   const [blueprint, setBlueprint] = useState<VideoBlueprint>(createDefaultBlueprint);
-  const [activeModule, setActiveModule] = useState("metadata");
+  const [activeModule, setActiveModule] = useState("scene");
   const [showPreview, setShowPreview] = useState(false);
 
   const updateModule = useCallback((moduleKey: string, data: any) => {
@@ -38,7 +37,7 @@ export default function Home() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${blueprint.metadata.name || "blueprint"}.json`;
+    a.download = "blueprint.json";
     a.click();
     URL.revokeObjectURL(url);
     toast.success("蓝图已导出");

@@ -11,8 +11,8 @@ import { X, ImageIcon, Info, Plus, Check } from "lucide-react";
 import { useState } from "react";
 
 // ============================================================
-// 字段配置 - 内容增强版
-// 新增：group 分组、desc 字段说明、preset 预置选项
+// 字段配置 - 深度优化版
+// 新增：物理真实感、镜头不完美感、感官深度、微观光影、叙事结构、音频空间感
 // ============================================================
 
 interface FieldDef {
@@ -31,14 +31,6 @@ interface FieldDef {
 }
 
 const FIELD_CONFIGS: Record<string, FieldDef[]> = {
-  metadata: [
-    { key: "blueprint_id", label: "蓝图 ID", type: "text", desc: "自动生成的唯一标识符" },
-    { key: "name", label: "蓝图名称", type: "text", required: true, placeholder: "如：赛博朋克城市夜景追逐戏-开场" },
-    { key: "description", label: "描述", type: "textarea", placeholder: "对该蓝图用途的简要说明" },
-    { key: "version", label: "版本号", type: "number", desc: "用于迭代管理" },
-    { key: "target_model", label: "目标模型", type: "select-with-desc", options: "target_model", desc: "选择目标 AI 视频生成模型，不同模型支持的参数范围不同" },
-    { key: "project_id", label: "项目 ID", type: "text", placeholder: "所属项目标识符，用于多镜头管理" },
-  ],
   scene: [
     // 主体基础信息
     { key: "subject_type", label: "主体类型", type: "select-with-desc", options: "subject_type", required: true, group: "主体信息" },
@@ -51,6 +43,7 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "subject_clothing", label: "服装/装备", type: "textarea", placeholder: "如：黑色长风衣，内搭深灰色高领毛衣，脚穿磨损的皮靴", group: "主体外观", desc: "描述穿着、配饰、装备等" },
     { key: "subject_body", label: "体态/姿势", type: "text", placeholder: "如：身材高瘦，微微驼背，双手插在风衣口袋里", group: "主体外观", desc: "描述体型、身高、姿态等" },
     { key: "subject_emotion", label: "情感/表情", type: "select-with-desc", options: "subject_emotion", group: "主体外观", desc: "选择预设或自定义描述" },
+    { key: "micro_expression", label: "微表情细节", type: "text", placeholder: "如：嘴角不自觉地微微抽动，眉头轻蹙", group: "主体外观", desc: "微妙的面部细节让角色更真实" },
     // 环境
     { key: "environment", label: "环境/场景", type: "textarea", required: true, placeholder: "如：雨夜的东京新宿歌舞伎町，霓虹招牌倒映在湿润的路面", group: "环境设定", desc: "描述场景的地点、空间和整体氛围" },
     { key: "environment_weather", label: "天气", type: "select", options: "environment_weather", group: "环境设定" },
@@ -58,9 +51,23 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "environment_details", label: "环境补充细节", type: "textarea", placeholder: "如：蒸汽从地下通风口升起，远处有警车闪烁的红蓝灯，地面积水反射霓虹灯光", group: "环境设定", desc: "补充环境中的特殊元素、道具、背景细节" },
     // 动作与叙事
     { key: "action", label: "核心动作", type: "textarea", required: true, placeholder: "如：在拥挤的人群中快速穿行（建议只描述一个核心动作）", group: "动作与叙事", desc: "每次只描述一个核心动作，避免复合动作导致混乱" },
+    { key: "action_physical_detail", label: "动作物理细节", type: "textarea", placeholder: "如：风衣下摆随步伐甩动，溅起的水花在霓虹灯下闪烁", group: "动作与叙事", desc: "描述动作引发的物理连锁反应，大幅提升真实感" },
     { key: "interaction", label: "交互行为", type: "textarea", placeholder: "如：肩膀撞到一个撑伞的路人，头也不回地继续前进", group: "动作与叙事", desc: "主体与环境或其他角色的交互" },
     { key: "mood", label: "情感基调", type: "select-with-desc", options: "mood", group: "动作与叙事", desc: "场景的整体情感氛围" },
     { key: "narrative_context", label: "叙事背景", type: "textarea", placeholder: "如：他刚刚在一间酒吧里发现了关键线索，但追踪者已经逼近", group: "动作与叙事", desc: "为 AI 提供故事上下文，帮助理解场景意图" },
+    // A 组：物理真实感
+    { key: "surface_material", label: "表面材质", type: "select-with-desc", options: "surface_material", group: "物理真实感", desc: "主体或关键物体的表面材质，消除'塑料感'" },
+    { key: "material_detail", label: "材质补充描述", type: "textarea", placeholder: "如：皮革表面有细微的龟裂纹理，金属扣件上有轻微的氧化痕迹", group: "物理真实感", desc: "补充材质的微观细节" },
+    { key: "physics_behavior", label: "物理行为", type: "select-with-desc", options: "physics_behavior", group: "物理真实感", desc: "画面中需要模拟的物理效果" },
+    { key: "physics_detail", label: "物理补充描述", type: "textarea", placeholder: "如：风衣下摆在行走时产生自然的褶皱和摆动，重力感明显", group: "物理真实感", desc: "补充物理行为的具体细节" },
+    { key: "micro_elements", label: "微观环境元素", type: "multi-select-with-desc", options: "micro_elements", group: "物理真实感", desc: "为场景增加真实感的微小元素（可多选）" },
+    { key: "weathering_aging", label: "磨损/老化痕迹", type: "textarea", placeholder: "如：墙壁上有剥落的油漆和涂鸦残迹，路面有裂缝和积水", group: "物理真实感", desc: "环境和物体的使用痕迹，避免'全新感'" },
+    { key: "interaction_physics", label: "交互物理效果", type: "textarea", placeholder: "如：手指触碰玻璃杯时留下的指纹，坐下时椅子发出的轻微吱呀声", group: "物理真实感", desc: "主体与物体交互时的物理反馈" },
+    { key: "gravity_weight", label: "重力/重量感", type: "select-with-desc", options: "gravity_weight", group: "物理真实感", desc: "物体的重量感影响运动的可信度" },
+    // C 组：感官深度
+    { key: "sensory_layers", label: "多感官描述", type: "textarea", placeholder: "如：空气中弥漫着雨后柏油路的气味，混合着街边拉面摊的味噌香气", group: "感官深度", desc: "描述嗅觉、触觉、温度等非视觉感官，帮助 AI 理解场景氛围" },
+    { key: "time_progression", label: "时间流动感", type: "textarea", placeholder: "如：天色从深蓝逐渐变为橙红，路灯逐一亮起", group: "感官深度", desc: "场景中时间的流动和变化" },
+    { key: "spatial_depth_layers", label: "空间纵深层次", type: "textarea", placeholder: "如：前景-雨滴划过的玻璃窗；中景-主角穿行的人群；远景-模糊的霓虹天际线", group: "感官深度", desc: "明确前景/中景/远景的内容，增强画面层次" },
   ],
   visualStyle: [
     { key: "art_style", label: "艺术风格", type: "select-with-desc", options: "art_style", group: "风格定义", desc: "整体的艺术风格流派" },
@@ -82,11 +89,20 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "camera_movement", label: "摄像机运动", type: "select-with-desc", options: "camera_movement", group: "运动控制", desc: "建议仅选一种运动方式，避免复合运动" },
     { key: "movement_speed", label: "运动速度", type: "select", options: "movement_speed", group: "运动控制" },
     { key: "movement_direction", label: "运动方向", type: "select", options: "movement_direction", group: "运动控制", desc: "摄像机运动的具体方向" },
-    { key: "camera_shake", label: "画面抖动", type: "select-with-desc", options: "camera_shake", group: "运动控制" },
     { key: "lens_focal_length", label: "镜头焦距", type: "select-with-desc", options: "lens_focal_length", group: "光学参数", desc: "镜头焦距影响视角和透视效果" },
     { key: "depth_of_field", label: "景深", type: "select-with-desc", options: "depth_of_field", group: "光学参数" },
     { key: "focus_target", label: "焦点目标", type: "text", placeholder: "如：主体的眼睛、前景的雨滴", group: "光学参数", desc: "焦点所在的位置或对象" },
     { key: "focus_transition", label: "焦点变化", type: "select-with-desc", options: "focus_transition", group: "光学参数", desc: "焦点的变化方式" },
+    // B 组：镜头不完美感
+    { key: "handheld_style", label: "手持风格", type: "select-with-desc", options: "handheld_style", group: "镜头个性", desc: "模拟手持拍摄的不同风格，消除'AI完美感'" },
+    { key: "camera_shake", label: "画面抖动", type: "select-with-desc", options: "camera_shake", group: "镜头个性" },
+    { key: "lens_imperfection", label: "镜头瑕疵", type: "multi-select-with-desc", options: "lens_imperfection", group: "镜头个性", desc: "真实镜头的光学瑕疵（可多选），让画面更有'拍摄感'" },
+    { key: "bokeh_shape", label: "散景形状", type: "select-with-desc", options: "bokeh_shape", group: "镜头个性", desc: "失焦光斑的形状，不同镜头有不同特征" },
+    { key: "film_texture", label: "底片/传感器纹理", type: "select-with-desc", options: "film_texture", group: "镜头个性", desc: "模拟不同拍摄介质的纹理特征" },
+    { key: "exposure_variation", label: "曝光变化", type: "select-with-desc", options: "exposure_variation", group: "镜头个性", desc: "模拟真实拍摄中的曝光波动" },
+    { key: "white_balance_cast", label: "白平衡偏移", type: "select-with-desc", options: "white_balance_cast", group: "镜头个性", desc: "模拟未校正白平衡的色偏" },
+    { key: "lens_coating", label: "镜头镀膜", type: "select-with-desc", options: "lens_coating", group: "镜头个性", desc: "镀膜类型影响眩光和色彩表现" },
+    { key: "focus_accuracy", label: "对焦精度", type: "select-with-desc", options: "focus_accuracy", group: "镜头个性", desc: "模拟手动对焦的精度差异" },
   ],
   lighting: [
     { key: "time_of_day", label: "时间段", type: "select-with-desc", options: "time_of_day", group: "自然光", desc: "场景的自然光时间段" },
@@ -99,6 +115,11 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "shadow_style", label: "阴影风格", type: "select-with-desc", options: "shadow_style", group: "光线属性" },
     { key: "practical_lights", label: "画面内光源", type: "select-with-desc", options: "practical_lights", group: "环境光效", desc: "画面中可见的实际光源" },
     { key: "atmospheric_effects", label: "大气效果", type: "multi-select-with-desc", options: "atmospheric_effects", group: "环境光效", desc: "大气/环境光效（可多选）" },
+    // D 组：微观光影
+    { key: "caustics", label: "焦散效果", type: "select-with-desc", options: "caustics", group: "微观光影", desc: "光线穿过透明/反射物体产生的光斑图案" },
+    { key: "subsurface_scattering", label: "次表面散射", type: "select-with-desc", options: "subsurface_scattering", group: "微观光影", desc: "光线穿透半透明材质的效果，如耳朵透光" },
+    { key: "color_spill", label: "色彩溢出", type: "textarea", placeholder: "如：红色霓虹灯的光芒溢出到角色面部的左侧，形成红色色调", group: "微观光影", desc: "有色光源在周围物体上的色彩投射" },
+    { key: "light_falloff", label: "光线衰减", type: "select-with-desc", options: "light_falloff", group: "微观光影", desc: "光线随距离减弱的方式" },
   ],
   audio: [
     { key: "ambient_sound", label: "环境音", type: "select-with-desc", options: "ambient_sound", group: "环境声音", desc: "持续的环境背景音" },
@@ -109,6 +130,12 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "sound_effects", label: "关键音效", type: "tags", placeholder: "输入音效后回车添加，如：急促的脚步声、水花飞溅", group: "音效与人声", desc: "与画面动作同步的关键音效" },
     { key: "dialogue", label: "对话", type: "textarea", placeholder: "如：\"我们没有时间了。\"——低沉、急促的男声", group: "音效与人声", desc: "场景中的对话内容，包含语气描述" },
     { key: "voiceover", label: "旁白", type: "textarea", placeholder: "如：沉稳的男性旁白：\"那一夜，一切都改变了。\"", group: "音效与人声", desc: "画外旁白内容与风格" },
+    // F 组：音频空间感
+    { key: "audio_space", label: "声学空间", type: "select-with-desc", options: "audio_space", group: "音频空间感", desc: "声音的混响和空间特征" },
+    { key: "audio_distance", label: "声源距离", type: "select-with-desc", options: "audio_distance", group: "音频空间感", desc: "声音的远近感" },
+    { key: "audio_layers", label: "音频层次分离", type: "textarea", placeholder: "如：前景-脚步声清晰；中景-人群嘈杂声；远景-模糊的警笛声", group: "音频空间感", desc: "不同距离的声音层次，增强空间感" },
+    { key: "sync_points", label: "音画同步点", type: "textarea", placeholder: "如：第2秒门被推开时同步一声吱呀声，第4秒杯子放下时同步碰撞声", group: "音频空间感", desc: "关键动作与声音的精确同步时间点" },
+    { key: "silence_use", label: "静默运用", type: "select-with-desc", options: "silence_use", group: "音频空间感", desc: "有意识地使用静默制造戏剧效果" },
   ],
   motion: [
     { key: "subject_motion_speed", label: "主体运动速度", type: "select", options: "movement_speed", group: "速度控制", desc: "画面中主体运动的速度" },
@@ -118,6 +145,12 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "transition_in", label: "开始过渡", type: "select-with-desc", options: "transition", group: "过渡效果", desc: "镜头开始的过渡方式" },
     { key: "transition_out", label: "结束过渡", type: "select-with-desc", options: "transition", group: "过渡效果", desc: "镜头结束的过渡方式" },
     { key: "rhythm_reference", label: "节奏参考", type: "textarea", placeholder: "如：如同心跳一般，从平静逐渐加速到急促", group: "过渡效果", desc: "用自然语言描述节奏变化" },
+    // E 组：叙事结构
+    { key: "opening_frame", label: "首帧策略", type: "textarea", placeholder: "如：从一只特写的眼睛开始，瞳孔中映射出霓虹灯光", group: "叙事结构", desc: "视频第一帧的内容，决定了 AI 的起始锚点" },
+    { key: "reveal_structure", label: "揭示结构", type: "select-with-desc", options: "reveal_structure", group: "叙事结构", desc: "信息如何逐步展示给观众" },
+    { key: "emotion_arc", label: "情绪弧线", type: "textarea", placeholder: "如：从平静的观察 → 逐渐紧张的发现 → 震惊的揭示", group: "叙事结构", desc: "短视频中的情绪变化轨迹" },
+    { key: "climax_moment", label: "高潮时刻", type: "textarea", placeholder: "如：第3-4秒，角色猛然转身面对镜头，表情从困惑变为恐惧", group: "叙事结构", desc: "最具戏剧性的时刻描述" },
+    { key: "ending_frame", label: "尾帧策略", type: "textarea", placeholder: "如：角色消失在雾中，只留下一盏孤独的路灯", group: "叙事结构", desc: "视频最后一帧的内容，影响整体印象" },
   ],
   technical: [
     { key: "resolution", label: "分辨率", type: "select-with-desc", options: "resolution", required: true, group: "输出规格" },
@@ -139,15 +172,17 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
         { label: "画面瑕疵", options: "negative_preset_artifact" },
         { label: "运动问题", options: "negative_preset_motion" },
         { label: "风格偏差", options: "negative_preset_style" },
+        { label: "AI 特征", options: "negative_preset_ai" },
       ],
     },
-    { key: "quality_boosters", label: "质量增强词", type: "preset-tags", group: "正向增强", desc: "质量增强关键词，点击预置标签快速添加",
+    { key: "quality_boosters", label: "质量增强词", type: "preset-tags", group: "正面增强", desc: "提升整体质量的关键词",
       presetGroups: [
         { label: "分辨率", options: "booster_preset_resolution" },
         { label: "电影感", options: "booster_preset_cinematic" },
         { label: "光影", options: "booster_preset_lighting" },
         { label: "动态", options: "booster_preset_motion" },
         { label: "整体", options: "booster_preset_overall" },
+        { label: "真实感", options: "booster_preset_realism" },
       ],
     },
     { key: "style_consistency", label: "风格一致性", type: "select-with-desc", options: "style_consistency", group: "一致性控制", desc: "与系列其他镜头的风格一致性要求" },
@@ -316,7 +351,6 @@ function FieldRenderer({ field, value, onChange }: { field: FieldDef; value: any
       );
     }
 
-    // 带说明文字的下拉选择
     case "select-with-desc": {
       const options = field.options ? (ENUMS as any)[field.options] || [] : [];
       return (
@@ -365,7 +399,6 @@ function FieldRenderer({ field, value, onChange }: { field: FieldDef; value: any
       );
     }
 
-    // 带说明的多选
     case "multi-select-with-desc": {
       const options = field.options ? (ENUMS as any)[field.options] || [] : [];
       const selected: string[] = value || [];
@@ -408,40 +441,6 @@ function FieldRenderer({ field, value, onChange }: { field: FieldDef; value: any
       );
     }
 
-    case "multi-select": {
-      const options = field.options ? (ENUMS as any)[field.options] || [] : [];
-      const selected: string[] = value || [];
-      return (
-        <div className="space-y-1.5">
-          <FieldLabel field={field} />
-          <div className="flex flex-wrap gap-1.5">
-            {options.map((opt: any) => {
-              const isSelected = selected.includes(opt.value);
-              return (
-                <Badge
-                  key={opt.value}
-                  variant={isSelected ? "default" : "outline"}
-                  className={`cursor-pointer text-xs transition-colors ${
-                    isSelected ? "bg-primary text-primary-foreground" : "hover:bg-accent"
-                  }`}
-                  onClick={() => {
-                    if (isSelected) {
-                      onChange(selected.filter((v) => v !== opt.value));
-                    } else {
-                      onChange([...selected, opt.value]);
-                    }
-                  }}
-                >
-                  {isSelected && <Check size={10} className="mr-0.5" />}
-                  {opt.label}
-                </Badge>
-              );
-            })}
-          </div>
-        </div>
-      );
-    }
-
     case "tags": {
       const tags: string[] = value || [];
       return (
@@ -477,14 +476,12 @@ function FieldRenderer({ field, value, onChange }: { field: FieldDef; value: any
       );
     }
 
-    // 带预置推荐的标签输入（用于质量控制模块）
     case "preset-tags": {
       const tags: string[] = value || [];
       const presetGroups = field.presetGroups || [];
       return (
         <div className="space-y-2">
           <FieldLabel field={field} />
-          {/* 已选标签 */}
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {tags.map((tag, i) => (
@@ -500,7 +497,6 @@ function FieldRenderer({ field, value, onChange }: { field: FieldDef; value: any
               ))}
             </div>
           )}
-          {/* 预置推荐分组 */}
           <div className="space-y-2 rounded-md border border-border/50 p-3 bg-card/30">
             {presetGroups.map((pg) => {
               const presets = (ENUMS as any)[pg.options] || [];
@@ -535,7 +531,6 @@ function FieldRenderer({ field, value, onChange }: { field: FieldDef; value: any
               );
             })}
           </div>
-          {/* 自定义输入 */}
           <Input
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
@@ -572,7 +567,8 @@ function FieldRenderer({ field, value, onChange }: { field: FieldDef; value: any
                 className="max-h-48 w-auto object-contain mx-auto"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = "none";
-                  (e.target as HTMLImageElement).nextElementSibling?.classList.remove("hidden");
+                  const sibling = (e.target as HTMLImageElement).nextElementSibling;
+                  if (sibling) sibling.classList.remove("hidden");
                 }}
               />
               <div className="hidden flex items-center justify-center gap-2 py-6 text-muted-foreground text-xs">
