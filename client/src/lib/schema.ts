@@ -107,7 +107,7 @@ export interface Lighting {
   rim_light: string;
   light_quality: string;
   color_temperature: string;
-  practical_lights: string;
+  practical_lights: string[];   // 迭代3：单选 → 多选（场景可能有多个画面内光源）
   atmospheric_effects: string[];
   shadow_style: string;
   color_spill: string;
@@ -916,7 +916,7 @@ export function createDefaultBlueprint(): VideoBlueprint {
       rim_light: "",
       light_quality: "",
       color_temperature: "",
-      practical_lights: "",
+      practical_lights: [],
       atmospheric_effects: [],
       shadow_style: "",
       color_spill: "",

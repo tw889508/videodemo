@@ -55,7 +55,7 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "subject_gender", label: "性别", type: "select", options: "subject_gender", group: "主体外观" },
     { key: "subject_appearance", label: "面部/外观特征", type: "textarea", placeholder: "如：面容疲惫，三天未刮的胡茬，左眼角有一道旧疤，嘴角不自觉地微微抽动", group: "主体外观", desc: "描述面部特征、肤色、发型、微表情等" },
     { key: "subject_clothing", label: "服装/装备", type: "textarea", placeholder: "如：黑色长风衣，内搭深灰色高领毛衣，脚穿磨损的皮靴", group: "主体外观", desc: "描述穿着、配饰、装备等" },
-    { key: "subject_body", label: "体态/姿势", type: "text", placeholder: "如：身材高瘦，微微驼背，双手插在风衣口袋里", group: "主体外观", desc: "描述体型、身高、姿态等" },
+    { key: "subject_body", label: "体态/姿势", type: "textarea", placeholder: "如：身材高瘦，微微驼背，双手插在风衣口袋里，左脚略微拖地，整个人重心偏向右侧", group: "主体外观", desc: "描述体型、身高、姿态等，可详细描写身体语言" },
     { key: "subject_emotion", label: "情感/表情", type: "select-with-desc", options: "subject_emotion", group: "主体外观", desc: "选择预设或自定义描述" },
     // 环境设定
     { key: "environment", label: "环境/场景", type: "textarea", required: true, placeholder: "如：雨夜的东京新宿歌舞伎町，霓虹招牌倒映在湿润的路面", group: "环境设定", desc: "描述场景的地点、空间和整体氛围" },
@@ -113,7 +113,7 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "light_quality", label: "光线质感", type: "select-with-desc", options: "light_quality", group: "光线属性" },
     { key: "color_temperature", label: "色温", type: "select-with-desc", options: "color_temperature", group: "光线属性" },
     { key: "shadow_style", label: "阴影风格", type: "select-with-desc", options: "shadow_style", group: "光线属性" },
-    { key: "practical_lights", label: "画面内光源", type: "select-with-desc", options: "practical_lights", group: "环境光效", desc: "画面中可见的实际光源" },
+    { key: "practical_lights", label: "画面内光源", type: "multi-select-with-desc", options: "practical_lights", group: "环境光效", desc: "画面中可见的实际光源，可多选（如霓虹灯+台灯+蜡烛）" },
     { key: "atmospheric_effects", label: "大气效果", type: "multi-select-with-desc", options: "atmospheric_effects", group: "环境光效", desc: "大气/环境光效（可多选）" },
     { key: "color_spill", label: "色彩溢出", type: "textarea", placeholder: "如：红色霓虹灯的光芒溢出到角色面部的左侧，形成红色色调", group: "环境光效", desc: "有色光源在周围物体上的色彩投射" },
   ],
