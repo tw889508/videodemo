@@ -11,8 +11,23 @@ import { X, ImageIcon, Info, Plus, Check } from "lucide-react";
 import { useState } from "react";
 
 // ============================================================
-// 字段配置 - 深度优化版
-// 新增：物理真实感、镜头不完美感、感官深度、微观光影、叙事结构、音频空间感
+// 字段配置 — 与 schema.ts 严格对齐
+// 变更说明：
+// - 删除：subject_count, micro_expression, action_physical_detail, interaction,
+//         material_detail, physics_detail, interaction_physics, gravity_weight,
+//         sensory_layers, time_progression, spatial_depth_layers
+// - 删除：camera_shake, white_balance_cast, lens_coating, focus_accuracy
+// - 删除：caustics, subsurface_scattering, light_falloff
+// - 删除：audio_mood, music_instrument, audio_space, audio_distance,
+//         audio_layers, sync_points, silence_use
+// - 删除：subject_motion_speed, camera_motion_speed, transition_in,
+//         transition_out, rhythm_reference
+// - 删除：style_consistency, character_consistency, reference_strength (quality)
+// - 删除：postProcessing 整个模块
+// - 新增：atmosphere_detail（合并感官深度三字段）
+// - 移入：reference_strength → technical
+// - 合并：action placeholder 引导包含物理细节和交互
+// - 合并：surface_material 改为 textarea（含材质细节）
 // ============================================================
 
 interface FieldDef {
@@ -32,42 +47,32 @@ interface FieldDef {
 
 const FIELD_CONFIGS: Record<string, FieldDef[]> = {
   scene: [
-    // 主体基础信息
+    // 主体信息
     { key: "subject_type", label: "主体类型", type: "select-with-desc", options: "subject_type", required: true, group: "主体信息" },
-    { key: "subject_count", label: "主体数量", type: "number", group: "主体信息", desc: "画面中同类主体的数量" },
-    { key: "subject", label: "核心主体", type: "textarea", required: true, placeholder: "描述画面中的核心主体，如：一位穿着黑色风衣的中年侦探", group: "主体信息", desc: "尽量具体，避免模糊描述" },
-    // 主体详细描述
+    { key: "subject", label: "核心主体", type: "textarea", required: true, placeholder: "描述画面中的核心主体，如：一位穿着黑色风衣的中年侦探；多个主体直接在此描述数量", group: "主体信息", desc: "尽量具体，避免模糊描述" },
+    // 主体外观
     { key: "subject_age", label: "年龄段", type: "select", options: "subject_age", group: "主体外观", desc: "仅当主体为人物时适用" },
     { key: "subject_gender", label: "性别", type: "select", options: "subject_gender", group: "主体外观" },
-    { key: "subject_appearance", label: "面部/外观特征", type: "textarea", placeholder: "如：面容疲惫，三天未刮的胡茬，左眼角有一道旧疤，深邃的棕色眼睛", group: "主体外观", desc: "描述面部特征、肤色、发型等" },
+    { key: "subject_appearance", label: "面部/外观特征", type: "textarea", placeholder: "如：面容疲惫，三天未刮的胡茬，左眼角有一道旧疤，嘴角不自觉地微微抽动", group: "主体外观", desc: "描述面部特征、肤色、发型、微表情等" },
     { key: "subject_clothing", label: "服装/装备", type: "textarea", placeholder: "如：黑色长风衣，内搭深灰色高领毛衣，脚穿磨损的皮靴", group: "主体外观", desc: "描述穿着、配饰、装备等" },
     { key: "subject_body", label: "体态/姿势", type: "text", placeholder: "如：身材高瘦，微微驼背，双手插在风衣口袋里", group: "主体外观", desc: "描述体型、身高、姿态等" },
     { key: "subject_emotion", label: "情感/表情", type: "select-with-desc", options: "subject_emotion", group: "主体外观", desc: "选择预设或自定义描述" },
-    { key: "micro_expression", label: "微表情细节", type: "text", placeholder: "如：嘴角不自觉地微微抽动，眉头轻蹙", group: "主体外观", desc: "微妙的面部细节让角色更真实" },
-    // 环境
+    // 环境设定
     { key: "environment", label: "环境/场景", type: "textarea", required: true, placeholder: "如：雨夜的东京新宿歌舞伎町，霓虹招牌倒映在湿润的路面", group: "环境设定", desc: "描述场景的地点、空间和整体氛围" },
     { key: "environment_weather", label: "天气", type: "select", options: "environment_weather", group: "环境设定" },
     { key: "environment_season", label: "季节", type: "select", options: "environment_season", group: "环境设定" },
     { key: "environment_details", label: "环境补充细节", type: "textarea", placeholder: "如：蒸汽从地下通风口升起，远处有警车闪烁的红蓝灯，地面积水反射霓虹灯光", group: "环境设定", desc: "补充环境中的特殊元素、道具、背景细节" },
-    // 动作与叙事
-    { key: "action", label: "核心动作", type: "textarea", required: true, placeholder: "如：在拥挤的人群中快速穿行（建议只描述一个核心动作）", group: "动作与叙事", desc: "每次只描述一个核心动作，避免复合动作导致混乱" },
-    { key: "action_physical_detail", label: "动作物理细节", type: "textarea", placeholder: "如：风衣下摆随步伐甩动，溅起的水花在霓虹灯下闪烁", group: "动作与叙事", desc: "描述动作引发的物理连锁反应，大幅提升真实感" },
-    { key: "interaction", label: "交互行为", type: "textarea", placeholder: "如：肩膀撞到一个撑伞的路人，头也不回地继续前进", group: "动作与叙事", desc: "主体与环境或其他角色的交互" },
+    // 动作与叙事（合并后）
+    { key: "action", label: "核心动作", type: "textarea", required: true, placeholder: "如：在拥挤的人群中快速穿行，风衣下摆随步伐甩动溅起水花，肩膀撞到撑伞的路人头也不回（建议只描述一个核心动作，可包含物理细节和交互）", group: "动作与叙事", desc: "描述核心动作及其物理细节、与环境/角色的交互" },
     { key: "mood", label: "情感基调", type: "select-with-desc", options: "mood", group: "动作与叙事", desc: "场景的整体情感氛围" },
     { key: "narrative_context", label: "叙事背景", type: "textarea", placeholder: "如：他刚刚在一间酒吧里发现了关键线索，但追踪者已经逼近", group: "动作与叙事", desc: "为 AI 提供故事上下文，帮助理解场景意图" },
-    // A 组：物理真实感
-    { key: "surface_material", label: "表面材质", type: "select-with-desc", options: "surface_material", group: "物理真实感", desc: "主体或关键物体的表面材质，消除'塑料感'" },
-    { key: "material_detail", label: "材质补充描述", type: "textarea", placeholder: "如：皮革表面有细微的龟裂纹理，金属扣件上有轻微的氧化痕迹", group: "物理真实感", desc: "补充材质的微观细节" },
+    // 物理真实感
+    { key: "surface_material", label: "表面材质", type: "textarea", placeholder: "如：皮革表面有细微的龟裂纹理，金属扣件上有轻微的氧化痕迹", group: "物理真实感", desc: "描述主体或关键物体的表面材质及微观细节，消除'塑料感'" },
     { key: "physics_behavior", label: "物理行为", type: "select-with-desc", options: "physics_behavior", group: "物理真实感", desc: "画面中需要模拟的物理效果" },
-    { key: "physics_detail", label: "物理补充描述", type: "textarea", placeholder: "如：风衣下摆在行走时产生自然的褶皱和摆动，重力感明显", group: "物理真实感", desc: "补充物理行为的具体细节" },
     { key: "micro_elements", label: "微观环境元素", type: "multi-select-with-desc", options: "micro_elements", group: "物理真实感", desc: "为场景增加真实感的微小元素（可多选）" },
     { key: "weathering_aging", label: "磨损/老化痕迹", type: "textarea", placeholder: "如：墙壁上有剥落的油漆和涂鸦残迹，路面有裂缝和积水", group: "物理真实感", desc: "环境和物体的使用痕迹，避免'全新感'" },
-    { key: "interaction_physics", label: "交互物理效果", type: "textarea", placeholder: "如：手指触碰玻璃杯时留下的指纹，坐下时椅子发出的轻微吱呀声", group: "物理真实感", desc: "主体与物体交互时的物理反馈" },
-    { key: "gravity_weight", label: "重力/重量感", type: "select-with-desc", options: "gravity_weight", group: "物理真实感", desc: "物体的重量感影响运动的可信度" },
-    // C 组：感官深度
-    { key: "sensory_layers", label: "多感官描述", type: "textarea", placeholder: "如：空气中弥漫着雨后柏油路的气味，混合着街边拉面摊的味噌香气", group: "感官深度", desc: "描述嗅觉、触觉、温度等非视觉感官，帮助 AI 理解场景氛围" },
-    { key: "time_progression", label: "时间流动感", type: "textarea", placeholder: "如：天色从深蓝逐渐变为橙红，路灯逐一亮起", group: "感官深度", desc: "场景中时间的流动和变化" },
-    { key: "spatial_depth_layers", label: "空间纵深层次", type: "textarea", placeholder: "如：前景-雨滴划过的玻璃窗；中景-主角穿行的人群；远景-模糊的霓虹天际线", group: "感官深度", desc: "明确前景/中景/远景的内容，增强画面层次" },
+    // 氛围补充（合并后）
+    { key: "atmosphere_detail", label: "氛围补充", type: "textarea", placeholder: "如：空气中弥漫着雨后柏油路的气味；天色从深蓝逐渐变为橙红；前景-雨滴划过的玻璃窗，中景-主角穿行的人群，远景-模糊的霓虹天际线", group: "氛围补充", desc: "多感官描述、时间流动感、空间纵深层次等，帮助 AI 理解场景的深层氛围" },
   ],
   visualStyle: [
     { key: "art_style", label: "艺术风格", type: "select-with-desc", options: "art_style", group: "风格定义", desc: "整体的艺术风格流派" },
@@ -92,16 +97,12 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "depth_of_field", label: "景深", type: "select-with-desc", options: "depth_of_field", group: "光学参数" },
     { key: "focus_target", label: "焦点目标", type: "text", placeholder: "如：主体的眼睛、前景的雨滴", group: "光学参数", desc: "焦点所在的位置或对象" },
     { key: "focus_transition", label: "焦点变化", type: "select-with-desc", options: "focus_transition", group: "光学参数", desc: "焦点的变化方式" },
-    // B 组：镜头不完美感
+    // 镜头个性
     { key: "handheld_style", label: "手持风格", type: "select-with-desc", options: "handheld_style", group: "镜头个性", desc: "模拟手持拍摄的不同风格，消除'AI完美感'" },
-    { key: "camera_shake", label: "画面抖动", type: "select-with-desc", options: "camera_shake", group: "镜头个性" },
     { key: "lens_imperfection", label: "镜头瑕疵", type: "multi-select-with-desc", options: "lens_imperfection", group: "镜头个性", desc: "真实镜头的光学瑕疵（可多选），让画面更有'拍摄感'" },
     { key: "bokeh_shape", label: "散景形状", type: "select-with-desc", options: "bokeh_shape", group: "镜头个性", desc: "失焦光斑的形状，不同镜头有不同特征" },
     { key: "film_texture", label: "底片/传感器纹理", type: "select-with-desc", options: "film_texture", group: "镜头个性", desc: "模拟不同拍摄介质的纹理特征" },
     { key: "exposure_variation", label: "曝光变化", type: "select-with-desc", options: "exposure_variation", group: "镜头个性", desc: "模拟真实拍摄中的曝光波动" },
-    { key: "white_balance_cast", label: "白平衡偏移", type: "select-with-desc", options: "white_balance_cast", group: "镜头个性", desc: "模拟未校正白平衡的色偏" },
-    { key: "lens_coating", label: "镜头镀膜", type: "select-with-desc", options: "lens_coating", group: "镜头个性", desc: "镀膜类型影响眩光和色彩表现" },
-    { key: "focus_accuracy", label: "对焦精度", type: "select-with-desc", options: "focus_accuracy", group: "镜头个性", desc: "模拟手动对焦的精度差异" },
   ],
   lighting: [
     { key: "time_of_day", label: "时间段", type: "select-with-desc", options: "time_of_day", group: "自然光", desc: "场景的自然光时间段" },
@@ -114,37 +115,20 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "shadow_style", label: "阴影风格", type: "select-with-desc", options: "shadow_style", group: "光线属性" },
     { key: "practical_lights", label: "画面内光源", type: "select-with-desc", options: "practical_lights", group: "环境光效", desc: "画面中可见的实际光源" },
     { key: "atmospheric_effects", label: "大气效果", type: "multi-select-with-desc", options: "atmospheric_effects", group: "环境光效", desc: "大气/环境光效（可多选）" },
-    // D 组：微观光影
-    { key: "caustics", label: "焦散效果", type: "select-with-desc", options: "caustics", group: "微观光影", desc: "光线穿过透明/反射物体产生的光斑图案" },
-    { key: "subsurface_scattering", label: "次表面散射", type: "select-with-desc", options: "subsurface_scattering", group: "微观光影", desc: "光线穿透半透明材质的效果，如耳朵透光" },
-    { key: "color_spill", label: "色彩溢出", type: "textarea", placeholder: "如：红色霓虹灯的光芒溢出到角色面部的左侧，形成红色色调", group: "微观光影", desc: "有色光源在周围物体上的色彩投射" },
-    { key: "light_falloff", label: "光线衰减", type: "select-with-desc", options: "light_falloff", group: "微观光影", desc: "光线随距离减弱的方式" },
+    { key: "color_spill", label: "色彩溢出", type: "textarea", placeholder: "如：红色霓虹灯的光芒溢出到角色面部的左侧，形成红色色调", group: "环境光效", desc: "有色光源在周围物体上的色彩投射" },
   ],
   audio: [
     { key: "ambient_sound", label: "环境音", type: "select-with-desc", options: "ambient_sound", group: "环境声音", desc: "持续的环境背景音" },
     { key: "music_style", label: "音乐风格", type: "select-with-desc", options: "music_style", group: "背景音乐", desc: "背景音乐的风格与情绪" },
     { key: "music_tempo", label: "音乐节奏", type: "select-with-desc", options: "music_tempo", group: "背景音乐" },
-    { key: "music_instrument", label: "主要乐器", type: "select", options: "music_instrument", group: "背景音乐", desc: "主导乐器或音色" },
-    { key: "audio_mood", label: "音频情绪", type: "select", options: "audio_mood", group: "背景音乐", desc: "整体音频的情绪基调" },
     { key: "sound_effects", label: "关键音效", type: "tags", placeholder: "输入音效后回车添加，如：急促的脚步声、水花飞溅", group: "音效与人声", desc: "与画面动作同步的关键音效" },
     { key: "dialogue", label: "对话", type: "textarea", placeholder: "如：\"我们没有时间了。\"——低沉、急促的男声", group: "音效与人声", desc: "场景中的对话内容，包含语气描述" },
     { key: "voiceover", label: "旁白", type: "textarea", placeholder: "如：沉稳的男性旁白：\"那一夜，一切都改变了。\"", group: "音效与人声", desc: "画外旁白内容与风格" },
-    // F 组：音频空间感
-    { key: "audio_space", label: "声学空间", type: "select-with-desc", options: "audio_space", group: "音频空间感", desc: "声音的混响和空间特征" },
-    { key: "audio_distance", label: "声源距离", type: "select-with-desc", options: "audio_distance", group: "音频空间感", desc: "声音的远近感" },
-    { key: "audio_layers", label: "音频层次分离", type: "textarea", placeholder: "如：前景-脚步声清晰；中景-人群嘈杂声；远景-模糊的警笛声", group: "音频空间感", desc: "不同距离的声音层次，增强空间感" },
-    { key: "sync_points", label: "音画同步点", type: "textarea", placeholder: "如：第2秒门被推开时同步一声吱呀声，第4秒杯子放下时同步碰撞声", group: "音频空间感", desc: "关键动作与声音的精确同步时间点" },
-    { key: "silence_use", label: "静默运用", type: "select-with-desc", options: "silence_use", group: "音频空间感", desc: "有意识地使用静默制造戏剧效果" },
   ],
   motion: [
-    { key: "subject_motion_speed", label: "主体运动速度", type: "select", options: "movement_speed", group: "速度控制", desc: "画面中主体运动的速度" },
-    { key: "camera_motion_speed", label: "摄像机运动速度", type: "select", options: "movement_speed", group: "速度控制" },
     { key: "time_effect", label: "时间效果", type: "select-with-desc", options: "time_effect", group: "时间控制", desc: "特殊的时间效果" },
     { key: "pacing", label: "节奏感", type: "select-with-desc", options: "pacing", group: "时间控制", desc: "场景的内在节奏感" },
-    { key: "transition_in", label: "开始过渡", type: "select-with-desc", options: "transition", group: "过渡效果", desc: "镜头开始的过渡方式" },
-    { key: "transition_out", label: "结束过渡", type: "select-with-desc", options: "transition", group: "过渡效果", desc: "镜头结束的过渡方式" },
-    { key: "rhythm_reference", label: "节奏参考", type: "textarea", placeholder: "如：如同心跳一般，从平静逐渐加速到急促", group: "过渡效果", desc: "用自然语言描述节奏变化" },
-    // E 组：叙事结构
+    // 叙事结构
     { key: "opening_frame", label: "首帧策略", type: "textarea", placeholder: "如：从一只特写的眼睛开始，瞳孔中映射出霓虹灯光", group: "叙事结构", desc: "视频第一帧的内容，决定了 AI 的起始锚点" },
     { key: "reveal_structure", label: "揭示结构", type: "select-with-desc", options: "reveal_structure", group: "叙事结构", desc: "信息如何逐步展示给观众" },
     { key: "emotion_arc", label: "情绪弧线", type: "textarea", placeholder: "如：从平静的观察 → 逐渐紧张的发现 → 震惊的揭示", group: "叙事结构", desc: "短视频中的情绪变化轨迹" },
@@ -160,6 +144,7 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "guidance_scale", label: "引导强度", type: "slider", min: 1, max: 20, step: 0.5, group: "生成控制", desc: "值越高越严格遵循提示词，过高可能导致过拟合" },
     { key: "motion_strength", label: "运动强度", type: "slider", min: 1, max: 10, step: 1, group: "生成控制", desc: "控制画面中运动的幅度" },
     { key: "num_inference_steps", label: "推理步数", type: "number", group: "生成控制", desc: "步数越多质量越高但速度越慢" },
+    { key: "reference_strength", label: "参考强度", type: "slider", min: 0, max: 1, step: 0.05, group: "生成控制", desc: "参考图像/视频的影响强度 (0-1)" },
     { key: "input_image_url", label: "输入图像 URL", type: "image-url", placeholder: "输入图片 URL 后可预览（图生视频模式）", group: "输入素材", desc: "图生视频模式的参考图像" },
     { key: "input_video_url", label: "输入视频 URL", type: "text", placeholder: "https://...（视频生视频模式）", group: "输入素材", desc: "视频生视频模式的参考视频" },
   ],
@@ -184,17 +169,6 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
         { label: "真实感", options: "booster_preset_realism" },
       ],
     },
-    { key: "style_consistency", label: "风格一致性", type: "select-with-desc", options: "style_consistency", group: "一致性控制", desc: "与系列其他镜头的风格一致性要求" },
-    { key: "character_consistency", label: "角色一致性", type: "select-with-desc", options: "style_consistency", group: "一致性控制", desc: "角色外观跨镜头的一致性要求" },
-    { key: "reference_strength", label: "参考强度", type: "slider", min: 0, max: 1, step: 0.05, group: "一致性控制", desc: "参考图像/视频的影响强度 (0-1)" },
-  ],
-  postProcessing: [
-    { key: "upscaling", label: "上采样", type: "select", options: "upscaling", group: "画质增强" },
-    { key: "stabilization", label: "画面稳定", type: "switch", group: "画质增强", desc: "是否进行画面稳定处理" },
-    { key: "loop", label: "无缝循环", type: "switch", group: "画质增强", desc: "是否生成无缝循环视频" },
-    { key: "color_correction", label: "色彩校正", type: "select-with-desc", options: "color_correction", group: "色彩与速度", desc: "后期色彩校正方案" },
-    { key: "speed_adjustment", label: "速度调整", type: "slider", min: 0.1, max: 4, step: 0.1, group: "色彩与速度", desc: "播放速度倍率：0.5=半速, 1.0=原速, 2.0=倍速" },
-    { key: "output_format", label: "输出格式", type: "select-with-desc", options: "output_format", group: "色彩与速度" },
   ],
 };
 

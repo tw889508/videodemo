@@ -104,3 +104,43 @@
 - **支持的参数：** duration, resolution, aspect_ratio, seed, guidance_scale
 - **提示词偏好：** 对光影描述响应敏感
 - **已知限制：** 人物面部一致性有时不稳定
+
+### [2026-03-08] 五层提示词框架（VO3 AI）
+- **来源：** https://www.vo3ai.com/blog/how-to-write-cinema-quality-ai-video-prompts-a-sora-2-and-veo3-prompting-masterc-2026-03-06
+- **关键发现：** 高质量提示词由五层构成：镜头语言 → 光照氛围 → 动作运动 → 材质纹理 → 参考风格
+- **详细内容：** 最佳提示词长度为 80-150 词（Sora 2）。超过 120 词常导致模型混淆。时间序列描述（"先...然后...当镜头拉远..."）是提升视频连贯性的关键技巧。提及真实相机名称和电影参考显著提升画面质感。
+- **对数据结构的影响：** 验证了现有模块划分（摄影+光照+动作+材质+风格）的合理性。action 字段的 placeholder 应引导用户使用时间序列描述。
+
+### [2026-03-08] Seedance 2.0 提示词结构
+- **来源：** https://www.imagine.art/blogs/seedance-2-0-prompt-guide
+- **关键发现：** 标准结构为 Subject → Action → Camera → Style，单个动作用现在时态清晰动词
+- **详细内容：** 最佳长度 50-200 词。支持负面提示词。强调包含小环境运动（蒸汽升起、织物摇摆、反射波纹）增加真实感。
+- **对数据结构的影响：** 验证了 micro_elements 字段的价值。
+
+### [2026-03-08] LTX Studio 提示词指南
+- **来源：** https://ltx.studio/blog/ai-video-prompt-guide
+- **关键发现：** 提示词结构为 Subject → Action → Setting → Camera Movement → Lighting → Style
+- **详细内容：** 强调渐进式细节方法（先基础后细化）。避免冲突指令、过于复杂的序列、模糊描述词。不要忽略运动信息和时间考量。
+- **对数据结构的影响：** 验证了现有模块结构的合理性。
+
+## 经验教训
+
+### [2026-03-08] 过度拆分字段降低灵活性
+- **问题：** 将"动作"拆为 action + action_physical_detail + interaction 三个字段，将"氛围"拆为 sensory_layers + time_progression + spatial_depth_layers 三个字段
+- **原因：** 追求"看起来全面"，但 AI 模型只接收一段连续的自然语言提示词，不会区分这些子字段
+- **结论：** 如果 AI 模型只能理解一句自然语言描述，拆成多字段反而降低灵活性。应合并为一个字段，通过 placeholder 引导用户覆盖各个方面
+
+### [2026-03-08] 多镜头概念不属于单次生成
+- **问题：** 添加了 previous_shot_description、continuity_elements、style_consistency、character_consistency 等字段
+- **原因：** 混淆了"多镜头项目管理"和"单次视频生成"的边界
+- **结论：** 当前主流模型不支持跨镜头上下文，这些字段的值无法写进提示词，应删除
+
+### [2026-03-08] 后期操作不属于提示词
+- **问题：** transition_in/transition_out（过渡效果）出现在运动模块中
+- **原因：** 混淆了"AI 视频生成"和"视频剪辑"的边界
+- **结论：** 淡入淡出、溶解、划变等是后期剪辑操作，AI 模型无法通过提示词控制
+
+### [2026-03-08] 3D 渲染术语不等于 AI 视频术语
+- **问题：** light_falloff（光线衰减）、caustics（焦散）、subsurface_scattering（次表面散射）使用了 3D 渲染引擎的专业术语
+- **原因：** 从 3D 渲染领域借用概念，但 AI 视频模型不是渲染引擎
+- **结论：** 如果效果可以用自然语言描述（如"阳光穿透耳朵边缘的红色透光"），应在场景描述中表达，而非作为独立的技术字段
