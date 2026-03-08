@@ -145,8 +145,11 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "motion_strength", label: "运动强度", type: "slider", min: 1, max: 10, step: 1, group: "生成控制", desc: "控制画面中运动的幅度" },
     { key: "num_inference_steps", label: "推理步数", type: "number", group: "生成控制", desc: "步数越多质量越高但速度越慢" },
     { key: "reference_strength", label: "参考强度", type: "slider", min: 0, max: 1, step: 0.05, group: "生成控制", desc: "参考图像/视频的影响强度 (0-1)" },
-    { key: "input_image_url", label: "输入图像 URL", type: "image-url", placeholder: "输入图片 URL 后可预览（图生视频模式）", group: "输入素材", desc: "图生视频模式的参考图像" },
-    { key: "input_video_url", label: "输入视频 URL", type: "text", placeholder: "https://...（视频生视频模式）", group: "输入素材", desc: "视频生视频模式的参考视频" },
+    { key: "enable_audio", label: "启用原生音频", type: "switch", group: "音频控制", desc: "开启后模型将同步生成音频（对话、环境音、音乐），支持 Kling 3/Veo 3.1/Sora 2/Seedance 等模型" },
+    { key: "start_frame_url", label: "首帧图像 URL", type: "image-url", placeholder: "输入图片 URL 后可预览（图生视频/首尾帧模式）", group: "输入素材", desc: "视频第一帧的参考图像，用于图生视频或首尾帧控制" },
+    { key: "end_frame_url", label: "尾帧图像 URL", type: "image-url", placeholder: "输入图片 URL 后可预览（首尾帧模式）", group: "输入素材", desc: "视频最后一帧的参考图像，模型将自动生成两帧之间的过渡动画（Veo 3.1/Kling 3/Seedance/Hailuo 支持）" },
+    { key: "input_video_url", label: "参考视频 URL", type: "text", placeholder: "https://...（视频生视频模式）", group: "输入素材", desc: "视频生视频模式的参考视频，用于风格迁移或运动保持" },
+    { key: "motion_reference_url", label: "运动参考视频 URL", type: "text", placeholder: "https://...（运动迁移模式）", group: "输入素材", desc: "上传参考视频来迁移运动模式到新生成的视频中（Kling 3 motion-control 支持）" },
   ],
   quality: [
     { key: "negative_prompts", label: "负面提示词", type: "preset-tags", group: "负面约束", desc: "需要避免的元素，点击预置标签快速添加",

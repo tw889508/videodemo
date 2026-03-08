@@ -145,7 +145,11 @@ export interface MotionPacing {
 
 // ============================================================
 // 技术参数（模型 API 直接使用的参数）
-// 新增：reference_strength（从quality模块移入，它是API参数）
+// 迭代1：reference_strength 从 quality 模块移入
+// 迭代2：input_image_url → start_frame_url（语义更清晰）
+// 迭代2 新增：end_frame_url（首尾帧控制，Veo 3.1/Kling 3/Seedance/Hailuo 均支持）
+// 迭代2 新增：enable_audio（原生音频开关，Kling 3/Veo 3.1/Sora 2/Seedance 支持）
+// 迭代2 新增：motion_reference_url（运动迁移参考视频，Kling 3 motion-control）
 // ============================================================
 export interface TechnicalParameters {
   resolution: string;
@@ -156,9 +160,14 @@ export interface TechnicalParameters {
   guidance_scale: number;
   motion_strength: number;
   num_inference_steps: number;
-  input_image_url: string;
-  input_video_url: string;
+  // 输入素材
+  start_frame_url: string;       // 首帧图像（图生视频/首尾帧模式）
+  end_frame_url: string;         // 尾帧图像（首尾帧模式，模型自动补间动画）
+  input_video_url: string;       // 参考视频（视频生视频模式）
+  motion_reference_url: string;  // 运动参考视频（运动迁移模式）
   reference_strength: number;
+  // 音频控制
+  enable_audio: boolean;         // 是否启用原生音频生成
 }
 
 // ============================================================
@@ -938,9 +947,12 @@ export function createDefaultBlueprint(): VideoBlueprint {
       guidance_scale: 7.5,
       motion_strength: 5,
       num_inference_steps: 50,
-      input_image_url: "",
+      start_frame_url: "",
+      end_frame_url: "",
       input_video_url: "",
+      motion_reference_url: "",
       reference_strength: 0.8,
+      enable_audio: true,
     },
     quality: {
       negative_prompts: [],
