@@ -168,3 +168,17 @@
 - **原因：** 只做了"减法"没做"加法"，没有调研最新模型的 API 参数
 - **结论：** 每轮迭代应同时做加法和减法——删除模型不支持的字段，新增模型新支持的字段
 
+
+### [2026-03-08] 空间提示词与画面布局（迭代4）
+
+**调研来源：** https://help.scenario.com/en/articles/spatial-prompting-for-videos-generation/
+
+**关键发现：**
+1. **空间提示词（Spatial Prompting）** — Veo 3 支持在首帧图像上绘制箭头、标注文字来引导运动方向和变化。这是一种新的输入模式，通过 start_frame_url 传入带标注的图像即可，不需要新增字段。
+2. **画面布局描述** — 构图类型（framing）只描述规则（三分法、中心构图等），但缺少对画面中元素具体空间位置的描述。
+
+**变更：**
+- 新增 `composition_detail`（textarea）到 cinematography 模块
+- 更新 `start_frame_url` 的 desc 提及空间提示词能力
+
+**经验：** 新能力不一定需要新字段——空间提示词是一种使用方式，通过现有的 start_frame_url 即可支持。

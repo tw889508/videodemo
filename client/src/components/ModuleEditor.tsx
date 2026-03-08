@@ -88,7 +88,8 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
   cinematography: [
     { key: "shot_type", label: "镜头景别", type: "select-with-desc", options: "shot_type", required: true, group: "镜头设置", desc: "镜头的景别大小，决定画面范围" },
     { key: "camera_angle", label: "拍摄角度", type: "select-with-desc", options: "camera_angle", group: "镜头设置", desc: "摄像机的拍摄角度" },
-    { key: "framing", label: "画面构图", type: "select-with-desc", options: "framing", group: "镜头设置", desc: "画面的构图方式" },
+    { key: "framing", label: "构图", type: "select-with-desc", options: "framing", group: "构图与视角", desc: "画面的构图规则" },
+    { key: "composition_detail", label: "画面布局", type: "textarea", placeholder: "如：主体位于画面左三分之一处，背向镜头；远处山脉占据右侧，地平线在画面下三分之一", group: "构图与视角", desc: "描述画面中各元素的具体空间位置关系，补充构图规则的具体应用" },
     { key: "pov_type", label: "视角类型", type: "select", options: "pov_type", group: "镜头设置" },
     { key: "camera_movement", label: "摄像机运动", type: "select-with-desc", options: "camera_movement", group: "运动控制", desc: "建议仅选一种运动方式，避免复合运动" },
     { key: "movement_speed", label: "运动速度", type: "select", options: "movement_speed", group: "运动控制" },
@@ -146,7 +147,7 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "num_inference_steps", label: "推理步数", type: "number", group: "生成控制", desc: "步数越多质量越高但速度越慢" },
     { key: "reference_strength", label: "参考强度", type: "slider", min: 0, max: 1, step: 0.05, group: "生成控制", desc: "参考图像/视频的影响强度 (0-1)" },
     { key: "enable_audio", label: "启用原生音频", type: "switch", group: "音频控制", desc: "开启后模型将同步生成音频（对话、环境音、音乐），支持 Kling 3/Veo 3.1/Sora 2/Seedance 等模型" },
-    { key: "start_frame_url", label: "首帧图像 URL", type: "image-url", placeholder: "输入图片 URL 后可预览（图生视频/首尾帧模式）", group: "输入素材", desc: "视频第一帧的参考图像，用于图生视频或首尾帧控制" },
+    { key: "start_frame_url", label: "首帧图像 URL", type: "image-url", placeholder: "输入图片 URL 后可预览（图生视频/首尾帧模式）", group: "输入素材", desc: "视频第一帧的参考图像，用于图生视频或首尾帧控制；Veo 3 支持在图像上绘制箭头/标注来引导运动（空间提示词）" },
     { key: "end_frame_url", label: "尾帧图像 URL", type: "image-url", placeholder: "输入图片 URL 后可预览（首尾帧模式）", group: "输入素材", desc: "视频最后一帧的参考图像，模型将自动生成两帧之间的过渡动画（Veo 3.1/Kling 3/Seedance/Hailuo 支持）" },
     { key: "input_video_url", label: "参考视频 URL", type: "text", placeholder: "https://...（视频生视频模式）", group: "输入素材", desc: "视频生视频模式的参考视频，用于风格迁移或运动保持" },
     { key: "motion_reference_url", label: "运动参考视频 URL", type: "text", placeholder: "https://...（运动迁移模式）", group: "输入素材", desc: "上传参考视频来迁移运动模式到新生成的视频中（Kling 3 motion-control 支持）" },

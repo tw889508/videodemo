@@ -69,14 +69,14 @@ export interface VisualStyle {
 
 // ============================================================
 // 摄影控制
-// 删除：camera_shake（与handheld_style重叠）
-// 删除：white_balance_cast（与color_temperature/color_grading重叠）
-// 删除：focus_accuracy（模型无法区分微妙的跑焦差异）
+// 迭代1：删除 camera_shake、white_balance_cast、focus_accuracy
+// 迭代4：新增 composition_detail（画面元素的具体空间位置描述）
 // ============================================================
 export interface Cinematography {
   shot_type: string;
   camera_angle: string;
   framing: string;
+  composition_detail: string;  // 迭代4：画面元素的具体空间布局描述
   camera_movement: string;
   movement_speed: string;
   movement_direction: string;
@@ -894,6 +894,7 @@ export function createDefaultBlueprint(): VideoBlueprint {
       shot_type: "",
       camera_angle: "",
       framing: "",
+      composition_detail: "",
       camera_movement: "",
       movement_speed: "",
       movement_direction: "",
