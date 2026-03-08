@@ -132,12 +132,8 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
   motion: [
     { key: "time_effect", label: "时间效果", type: "select-with-desc", options: "time_effect", group: "时间控制", desc: "特殊的时间效果" },
     { key: "pacing", label: "节奏感", type: "select-with-desc", options: "pacing", group: "时间控制", desc: "场景的内在节奏感" },
-    // 叙事结构
-    { key: "opening_frame", label: "首帧策略", type: "textarea", placeholder: "如：从一只特写的眼睛开始，瞳孔中映射出霓虹灯光", group: "叙事结构", desc: "视频第一帧的内容，决定了 AI 的起始锚点" },
-    { key: "reveal_structure", label: "揭示结构", type: "select-with-desc", options: "reveal_structure", group: "叙事结构", desc: "信息如何逐步展示给观众" },
-    { key: "emotion_arc", label: "情绪弧线", type: "textarea", placeholder: "如：从平静的观察 → 逐渐紧张的发现 → 震惊的揭示", group: "叙事结构", desc: "短视频中的情绪变化轨迹" },
-    { key: "climax_moment", label: "高潮时刻", type: "textarea", placeholder: "如：第3-4秒，角色猛然转身面对镜头，表情从困惑变为恐惧", group: "叙事结构", desc: "最具戏剧性的时刻描述" },
-    { key: "ending_frame", label: "尾帧策略", type: "textarea", placeholder: "如：角色消失在雾中，只留下一盏孤独的路灯", group: "叙事结构", desc: "视频最后一帧的内容，影响整体印象" },
+    // 时间轴叙事（合并后）
+    { key: "timeline_beats", label: "时间轴叙事", type: "textarea", placeholder: "如：\n0-2秒：从一只特写的眼睛开始，瞳孔中映射出霓虹灯光，镜头缓慢拉远\n2-4秒：角色猛然转身面对镜头，表情从困惑变为恐惧，背景霓虹灯闪烁\n4-5秒：角色消失在雾中，只留下一盏孤独的路灯", group: "时间轴叙事", desc: "按时间段描述视频中发生的事件。Kling 3 支持 Beat 时间线格式，其他模型也能理解时序描述。将原来的首帧/高潮/尾帧合并为一个连贯的时间轴" },
   ],
   technical: [
     { key: "resolution", label: "分辨率", type: "select-with-desc", options: "resolution", required: true, group: "输出规格" },

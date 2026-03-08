@@ -135,16 +135,15 @@ export interface AudioDesign {
 // 删除：transition_in, transition_out（后期剪辑操作）
 // 删除：rhythm_reference（过于抽象，模型无法响应）
 // 删除：subject_motion_speed, camera_motion_speed（与action描述和cinematography重叠）
+// 迭代6 删除：reveal_structure（编剧术语，AI模型不理解）
+// 迭代6 删除：emotion_arc（5-10秒视频不存在情绪弧线，这是长片叙事概念）
+// 迭代6 合并：opening_frame + climax_moment + ending_frame → timeline_beats
 // ============================================================
 export interface MotionPacing {
   time_effect: string;
   pacing: string;
-  // 叙事结构
-  opening_frame: string;
-  reveal_structure: string;
-  emotion_arc: string;
-  climax_moment: string;
-  ending_frame: string;
+  // 时间轴叙事（合并后）
+  timeline_beats: string;
 }
 
 // ============================================================
@@ -940,11 +939,7 @@ export function createDefaultBlueprint(): VideoBlueprint {
     motion: {
       time_effect: "",
       pacing: "",
-      opening_frame: "",
-      reveal_structure: "",
-      emotion_arc: "",
-      climax_moment: "",
-      ending_frame: "",
+      timeline_beats: "",
     },
     technical: {
       resolution: "1080p",
