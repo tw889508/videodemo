@@ -15,13 +15,13 @@ export interface VideoBlueprint {
 
 // ============================================================
 // 场景描述
-// 删除：subject_count（数量应在subject中自然描述）
-// 删除：micro_expression（与subject_emotion重叠）
-// 删除：scene_complexity（不是提示词内容）
-// 删除：previous_shot_description, continuity_elements（多镜头概念）
-// 合并：action_physical_detail, interaction → action（通过placeholder引导）
-// 合并：material_detail → surface_material（改为文本字段）
+// 删除：subject_count, micro_expression, scene_complexity,
+//        previous_shot_description, continuity_elements
+// 合并：action_physical_detail, interaction → action
+// 合并：material_detail → surface_material
 // 合并：sensory_layers, time_progression, spatial_depth_layers → atmosphere_detail
+// 迭代5 新增：physics_forces（力学交互描述，提升 Runway/Sora 等模型的物理真实感）
+// 迭代5 新增：physics_constraints（刚性约束，防止物体变形/融化）
 // ============================================================
 export interface SceneDescription {
   // 主体信息
@@ -46,6 +46,8 @@ export interface SceneDescription {
   // 物理真实感
   surface_material: string;
   physics_behavior: string;
+  physics_forces: string;
+  physics_constraints: string;
   micro_elements: string[];
   weathering_aging: string;
   // 氛围补充（合并后）
@@ -116,6 +118,7 @@ export interface Lighting {
 // ============================================================
 // 音频设计
 // 删除：audio_mood（与场景模块的mood重叠）
+// 迭代5 新增：dialogue_characters（结构化角色声音定义，支持 Kling 3 的多角色对话标签系统）
 // ============================================================
 export interface AudioDesign {
   ambient_sound: string;
@@ -123,6 +126,7 @@ export interface AudioDesign {
   music_tempo: string;
   sound_effects: string[];
   dialogue: string;
+  dialogue_characters: string;
   voiceover: string;
 }
 
@@ -875,6 +879,8 @@ export function createDefaultBlueprint(): VideoBlueprint {
       narrative_context: "",
       surface_material: "",
       physics_behavior: "",
+      physics_forces: "",
+      physics_constraints: "",
       micro_elements: [],
       weathering_aging: "",
       atmosphere_detail: "",
@@ -928,6 +934,7 @@ export function createDefaultBlueprint(): VideoBlueprint {
       music_tempo: "",
       sound_effects: [],
       dialogue: "",
+      dialogue_characters: "",
       voiceover: "",
     },
     motion: {

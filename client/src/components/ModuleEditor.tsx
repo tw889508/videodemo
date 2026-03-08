@@ -69,6 +69,8 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     // 物理真实感
     { key: "surface_material", label: "表面材质", type: "textarea", placeholder: "如：皮革表面有细微的龟裂纹理，金属扣件上有轻微的氧化痕迹", group: "物理真实感", desc: "描述主体或关键物体的表面材质及微观细节，消除'塑料感'" },
     { key: "physics_behavior", label: "物理行为", type: "select-with-desc", options: "physics_behavior", group: "物理真实感", desc: "画面中需要模拟的物理效果" },
+    { key: "physics_forces", label: "力学交互", type: "textarea", placeholder: "如：风以 30km/h 的速度从左侧吹来，将雨伞向右拉扯，雨滴以 45° 角线的方式打在地面上溅起水花", group: "物理真实感", desc: "描述场景中的力的作用：重量、速度、碰撞力、阻力、惯性等。Runway 模型对力学描述响应极佳，Sora 对因果链描述响应极佳" },
+    { key: "physics_constraints", label: "刚性约束", type: "textarea", placeholder: "如：金属门始终保持坚硬不变形；玻璃杯保持透明完整不融化；建筑结构保持稳固不崩塌", group: "物理真实感", desc: "明确指定哪些物体不应变形/融化/消失，防止 AI 生成中常见的物体形变问题" },
     { key: "micro_elements", label: "微观环境元素", type: "multi-select-with-desc", options: "micro_elements", group: "物理真实感", desc: "为场景增加真实感的微小元素（可多选）" },
     { key: "weathering_aging", label: "磨损/老化痕迹", type: "textarea", placeholder: "如：墙壁上有剥落的油漆和涂鸦残迹，路面有裂缝和积水", group: "物理真实感", desc: "环境和物体的使用痕迹，避免'全新感'" },
     // 氛围补充（合并后）
@@ -123,7 +125,8 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
     { key: "music_style", label: "音乐风格", type: "select-with-desc", options: "music_style", group: "背景音乐", desc: "背景音乐的风格与情绪" },
     { key: "music_tempo", label: "音乐节奏", type: "select-with-desc", options: "music_tempo", group: "背景音乐" },
     { key: "sound_effects", label: "关键音效", type: "tags", placeholder: "输入音效后回车添加，如：急促的脚步声、水花飞溅", group: "音效与人声", desc: "与画面动作同步的关键音效" },
-    { key: "dialogue", label: "对话", type: "textarea", placeholder: "如：\"我们没有时间了。\"——低沉、急促的男声", group: "音效与人声", desc: "场景中的对话内容，包含语气描述" },
+    { key: "dialogue_characters", label: "角色声音定义", type: "textarea", placeholder: "如：\n角色A：侦探，男性，40岁，低沉沙哑的声音\n角色B：嫌疑人，女性，25岁，尖锐紧张的声音", group: "音效与人声", desc: "定义场景中每个说话角色的声音特征。Kling 3 支持结构化角色标签 [Character A: 名称, 语气]: \"台词\"" },
+    { key: "dialogue", label: "对话剧本", type: "textarea", placeholder: "如：\n侦探缓慢向前信身，双手平放在桌面上。\n[侦探，克制但威胁的语气]: \"我们别再装了。\"\n嫌疑人在椅子上紧张地挪动。\n[嫌疑人，尖锐防御的语气]: \"我已经告诉你一切了。\"", group: "音效与人声", desc: "场景中的对话内容。建议使用“动作+对话”交织的剧本格式，而不是纯台词。历史对话格式仍然兼容" },
     { key: "voiceover", label: "旁白", type: "textarea", placeholder: "如：沉稳的男性旁白：\"那一夜，一切都改变了。\"", group: "音效与人声", desc: "画外旁白内容与风格" },
   ],
   motion: [
