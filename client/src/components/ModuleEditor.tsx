@@ -72,7 +72,6 @@ const FIELD_CONFIGS: Record<string, FieldDef[]> = {
   visualStyle: [
     { key: "art_style", label: "艺术风格", type: "select-with-desc", options: "art_style", group: "风格定义", desc: "整体的艺术风格流派" },
     { key: "era_style", label: "年代风格", type: "text", placeholder: "如：1980年代复古、未来主义2077、维多利亚时代", group: "风格定义", desc: "特定年代的视觉风格" },
-    { key: "render_engine", label: "渲染引擎", type: "select-with-desc", options: "render_engine", group: "风格定义", desc: "指定渲染引擎可获得特定的 3D 渲染质感" },
     { key: "director_reference", label: "导演参考", type: "text", placeholder: "如：Wes Anderson, Denis Villeneuve, 王家卫", group: "创作参考", desc: "模仿特定导演的视觉语言，比模糊词汇更有效" },
     { key: "film_reference", label: "电影参考", type: "text", placeholder: "如：Blade Runner 2049, 花样年华, Interstellar", group: "创作参考", desc: "模仿特定电影的摄影美学" },
     { key: "camera_reference", label: "设备参考", type: "text", placeholder: "如：Shot on ARRI Alexa Mini LF, Shot on 16mm film", group: "创作参考", desc: "模仿特定摄影设备的画面质感" },

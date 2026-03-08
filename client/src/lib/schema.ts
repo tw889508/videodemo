@@ -57,7 +57,6 @@ export interface SceneDescription {
 export interface VisualStyle {
   art_style: string;
   era_style: string;
-  render_engine: string;
   director_reference: string;
   film_reference: string;
   camera_reference: string;
@@ -370,16 +369,7 @@ export const ENUMS = {
     { value: "监控录像", label: "监控录像 Surveillance", desc: "低画质、固定机位、时间戳" },
     { value: "手机拍摄", label: "手机拍摄 Phone Footage", desc: "竖屏、自动对焦、日常感" },
   ],
-  render_engine: [
-    { value: "无", label: "无/不指定" },
-    { value: "Unreal Engine 5", label: "Unreal Engine 5", desc: "游戏级实时渲染" },
-    { value: "Octane Render", label: "Octane Render", desc: "GPU 光线追踪渲染" },
-    { value: "V-Ray", label: "V-Ray", desc: "专业建筑/产品渲染" },
-    { value: "Blender Cycles", label: "Blender Cycles", desc: "开源路径追踪渲染" },
-    { value: "Cinema 4D", label: "Cinema 4D", desc: "运动图形渲染" },
-    { value: "Arnold", label: "Arnold", desc: "电影级光线追踪" },
-    { value: "Redshift", label: "Redshift", desc: "GPU 加速渲染" },
-  ],
+
   color_palette: [
     { value: "青橙对比", label: "青橙对比 Teal & Orange", desc: "好莱坞经典电影配色" },
     { value: "莫兰迪", label: "莫兰迪 Morandi", desc: "低饱和度灰调色系" },
@@ -1053,7 +1043,6 @@ export function createDefaultBlueprint(): VideoBlueprint {
     visualStyle: {
       art_style: "",
       era_style: "",
-      render_engine: "",
       director_reference: "",
       film_reference: "",
       camera_reference: "",
